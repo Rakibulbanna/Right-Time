@@ -2,13 +2,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const passport = require('passport');
-
-
+const app = express();
 const todoHandler = require('./routeHandler/todoHandler')
 const questionHandler = require('./routeHandler/questionHandler')
 const userHandler = require('./routeHandler/userHandler')
+const HomeHandler = require('./routeHandler/HomeHandler')
 
-const app = express();
 app.use(express.json());
 require("dotenv").config();
 
@@ -27,6 +26,7 @@ mongoose
     app.use('/todo',todoHandler);
     app.use('/question',questionHandler);
     app.use('/user',userHandler);
+    app.use('/home',HomeHandler);
 
 app.get("/", (req, res) => {
   res.send("server is running in 5001 port");

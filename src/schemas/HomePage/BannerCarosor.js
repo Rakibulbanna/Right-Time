@@ -17,4 +17,4 @@ const BannerCarosor = mongoose.Schema({
 
 });
 
-module.exports = BannerCarosor;
+module.exports = mongoose.model('BannerCarosor',BannerCarosor);
