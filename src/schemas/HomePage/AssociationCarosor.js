@@ -17,4 +17,4 @@ const AssociationCarosor = mongoose.Schema({
 
 });
 
-module.exports = AssociationCarosor;
+module.exports = mongoose.model('AssociationCarosor',AssociationCarosor);

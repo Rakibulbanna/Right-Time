@@ -6,6 +6,11 @@ const ServicesCarosor = mongoose.Schema({
         type: String,
         required: true,
     },
+    subtitle:{
+        type: String,
+        required: true,
+    }
+    ,
     iconURL:{
         type: String,
         required: true,
@@ -13,4 +18,4 @@ const ServicesCarosor = mongoose.Schema({
 
 });
 
-module.exports = ServicesCarosor;
+module.exports = mongoose.model('ServicesCarosor',ServicesCarosor);

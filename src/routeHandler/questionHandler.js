@@ -66,7 +66,7 @@ router.post("/addreply", async (req, res) => {
 });
 
 // reply deleting
-router.delete("/replydelete/", async (req, res) => {
+router.delete("/commentdelete", async (req, res) => {
 
  await question.findOneAndUpdate(
     { _id: req.body.questionId },
@@ -83,10 +83,10 @@ router.delete("/replydelete/", async (req, res) => {
     }
   ).exec((err, data) => {
     if (err) {
-      res.status(500).json({ message: "reply deletion failed!!" });
+      res.status(500).json({ message: "Comment deletion failed!!" });
     } else {
       //console.log(data);
-      res.status(200).json({ message: "reply deleted successfully!!" });
+      res.status(200).json({ message: "Comment deleted successfully!!" });
     }
   });
   
