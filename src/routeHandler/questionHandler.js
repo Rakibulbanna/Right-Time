@@ -15,7 +15,17 @@ const question = new mongoose.model("questions", questionSchema);
 // all question getting
 router.get("/", async (req, res) => {
   try {
-    const data = await question.find();
+    const data = await question.find({})
+   // console.log(data.map(i=>i.Comments))
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
+// get only comments
+router.get("/comments", async (req, res) => {
+  try {
+    const data = await question.find({}).select('Comments')
 
     res.status(200).json(data);
   } catch (err) {
@@ -42,7 +52,7 @@ router.post("/insert-question",authenticate, async (req, res) => {
 });
 
 //reply adding
-router.post("/addreply", async (req, res) => {
+router.post("/addcomments", async (req, res) => {
   await question.update(
     { _id: req.body._id },
     {
@@ -87,6 +97,30 @@ router.delete("/commentdelete", async (req, res) => {
     } else {
       //console.log(data);
       res.status(200).json({ message: "Comment deleted successfully!!" });
+    }
+  });
+  
+});
+// reply updaing
+router.put("/commentupdate", async (req, res) => {
+
+ await question.findOneAndUpdate(
+    { question: req.body.question, "Comments.description":req.body.description},
+    {
+      $set: {
+        "Comments.$.description": req.body.target
+      }
+     },
+     {
+      useFindAndModify: false,
+      new: true,
+    }
+  ).exec((err, data) => {
+    if (err) {
+      res.status(500).json({ message: "Comment updated failed!!" });
+    } else {
+      //console.log(data);
+      res.status(200).json({ message: "Comment updated successfully!!" });
     }
   });
   

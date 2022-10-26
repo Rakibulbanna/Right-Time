@@ -6,7 +6,8 @@ const app = express();
 const todoHandler = require('./routeHandler/todoHandler')
 const questionHandler = require('./routeHandler/questionHandler')
 const userHandler = require('./routeHandler/userHandler')
-const HomeHandler = require('./routeHandler/HomeHandler')
+const HomeHandler = require('./routeHandler/HomeHandler');
+const TrainingHandler = require('./routeHandler/TrainingHandler');
 
 app.use(express.json());
 require("dotenv").config();
@@ -15,6 +16,8 @@ app.use(cors())
 
 app.use(passport.initialize())
 require('./config/passport')(passport)
+
+
 
 const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.oitzi.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
@@ -27,6 +30,8 @@ mongoose
     app.use('/question',questionHandler);
     app.use('/user',userHandler);
     app.use('/home',HomeHandler);
+    app.use('/training',TrainingHandler);
+    
 
 app.get("/", (req, res) => {
   res.send("server is running in 5001 port");

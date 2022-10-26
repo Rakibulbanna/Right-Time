@@ -25,7 +25,7 @@ router.post("/banner", async (req, res) => {
       try {
         const data = newBanner.save();
         res.status(200).json({
-          message: "BannerCarosor inserted successfully"
+          message: "BannerCarosor inserted successfully",data:data
         });
       } catch (err) {
         res.status(500).send({
@@ -157,6 +157,10 @@ router.delete('/association',async(req,res)=>{
     }
   })
   })
+
+  // partner carosel
+  
+
 
 
 
