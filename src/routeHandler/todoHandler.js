@@ -89,11 +89,12 @@ router.get("/selected", async (req, res) => {
 
   try {
     const data = await Todo.find({ status: "active" })
-      .select({
-        _id: 0,
-        __v: 0,
-        date: 0,
-      })
+      .select("title description") //if I want to select only "title","description"
+        //.select({
+        //     _id : 0,
+        //     __v : 0, // If I want not to load _id,__v and date data
+        //     date: 0
+        // })
       .limit(2);
 
     res.status(200).json(data);

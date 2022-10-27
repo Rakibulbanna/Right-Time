@@ -5,7 +5,7 @@ const Partners = mongoose.Schema({
     {
       name: {
         type: String,
-        required: true,
+       // required: true,
         trim: true,
       },
       url: {
@@ -17,7 +17,7 @@ const Partners = mongoose.Schema({
     {
       name: {
         type: String,
-        required: true,
+       // required: true,
         trim: true,
       },
       url: {
@@ -29,7 +29,7 @@ const Partners = mongoose.Schema({
     {
       name: {
         type: String,
-        required: true,
+       // required: true,
         trim: true,
       },
       url: {

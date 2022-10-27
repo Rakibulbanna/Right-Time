@@ -15,13 +15,18 @@ const question = new mongoose.model("questions", questionSchema);
 // all question getting
 router.get("/", async (req, res) => {
   try {
-    const data = await question.find({})
-   // console.log(data.map(i=>i.Comments))
+  // ***** array size count
+   // const data = await question.countDocuments({})
+
+  const data = await question.find({})
     res.status(200).json(data);
   } catch (err) {
+    console.log(err)
     res.status(500).send("server side error!");
   }
 });
+
+
 // get only comments
 router.get("/comments", async (req, res) => {
   try {

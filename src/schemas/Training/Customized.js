@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const RightTimeCustomized = mongoose.Schema({
+const Customized = mongoose.Schema({
     
         name: {
           type: String,
@@ -21,4 +21,4 @@ const RightTimeCustomized = mongoose.Schema({
         }
       
 })
-module.exports = mongoose.model('RightTimeCustomized',RightTimeCustomized);
+module.exports = mongoose.model('Customized',Customized);
