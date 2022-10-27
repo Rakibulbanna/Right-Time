@@ -16,9 +16,25 @@ const question = new mongoose.model("questions", questionSchema);
 router.get("/", async (req, res) => {
   try {
   // ***** array size count
-   // const data = await question.countDocuments({})
+    //const data = await question.countDocuments({})
+    const data = await question.find({})
+  // const data = await question.find({}).select({
+  //   _id:0,
+  //   questionMakerID:0,
+  //   question:0,
+  //   reply:0,
+  //   __v:0
+  // })
+  //let arr=[];
+  // const b = data.map((i)=>{
+  //  arr.push(i.Comments.length)
+  // })
 
-  const data = await question.find({})
+  // for (let i of data){
+  //   arr.push(i.Comments.length)
+  // }
+
+  //const b = data[0].Comments.length
     res.status(200).json(data);
   } catch (err) {
     console.log(err)
