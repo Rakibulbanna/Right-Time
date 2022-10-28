@@ -2,15 +2,37 @@ const express = require("express");
 const Partners = require("../schemas/Partners/Partners");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  try {
-    const data = await Partners.find({});
+//getting partner
 
-    res.status(200).json(data);
+router.get("/Service", async (req, res) => {
+  try {
+    const data = await Partners.find({}).select('ServicePartner');
+
+    res.status(200).json(data[0].ServicePartner);
   } catch (err) {
     res.status(500).send("server side error!");
   }
 });
+router.get("/Solution", async (req, res) => {
+  try {
+    const data = await Partners.find({}).select('SolutionPartner');
+
+    res.status(200).json(data[0].SolutionPartner);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
+router.get("/Association", async (req, res) => {
+  try {
+    const data = await Partners.find({}).select('Association');
+
+    res.status(200).json(data[0].Association);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
+
+//partner Insert Section
 
 const firstInsert = async (e) => {
   const newCollection = Partners({
@@ -43,7 +65,7 @@ const firstInsert = async (e) => {
   });
 };
 
-router.post("/addServicePartner", async (req, res) => {
+router.post("/addService", async (req, res) => {
   const dataCount = await Partners.countDocuments({});
 
   if (dataCount === 1) {
@@ -140,7 +162,7 @@ else {
   }
 });
 
-router.post("/addSolutionPartner", async (req, res) => {
+router.post("/addSolution", async (req, res) => {
   const dataCount = await Partners.countDocuments({});
 
   if (dataCount === 1) {
@@ -329,6 +351,91 @@ else {
     });
   }
 });
+
+
+// partner delete section
+
+router.delete("/Service/:id", async (req, res) => {
+  const query = await Partners.find({}).select('_id')
+  const id = query[0]._id.toString();
+  await Partners.findOneAndUpdate(
+     { _id: id},
+     {
+       $pull: {
+        ServicePartner: {
+            _id: req.params.id 
+           }
+       }
+      },
+      {
+       useFindAndModify: false,
+       new: true,
+     }
+   ).exec((err, data) => {
+     if (err) {
+       res.status(500).json({ message: "ServicePartner deletion failed!!" });
+     } else {
+       //console.log(data);
+       res.status(200).json({ message: "ServicePartner deleted successfully!!" });
+     }
+   });
+   
+ });
+
+router.delete("/Solution/:id", async (req, res) => {
+  const query = await Partners.find({}).select('_id')
+  const id = query[0]._id.toString();
+  await Partners.findOneAndUpdate(
+     { _id: id},
+     {
+       $pull: {
+        SolutionPartner: {
+            _id: req.params.id 
+           }
+       }
+      },
+      {
+       useFindAndModify: false,
+       new: true,
+     }
+   ).exec((err, data) => {
+     if (err) {
+       res.status(500).json({ message: "SolutionPartner deletion failed!!" });
+     } else {
+       //console.log(data);
+       res.status(200).json({ message: "SolutionPartner deleted successfully!!" });
+     }
+   });
+   
+ });
+
+router.delete("/Association/:id", async (req, res) => {
+  const query = await Partners.find({}).select('_id')
+  const id = query[0]._id.toString();
+  await Partners.findOneAndUpdate(
+     { _id: id},
+     {
+       $pull: {
+        Association: {
+            _id: req.params.id 
+           }
+       }
+      },
+      {
+       useFindAndModify: false,
+       new: true,
+     }
+   ).exec((err, data) => {
+     if (err) {
+       res.status(500).json({ message: "Association deletion failed!!" });
+     } else {
+       //console.log(data);
+       res.status(200).json({ message: "Association deleted successfully!!" });
+     }
+   });
+   
+ });
+
 
 router.put("/", (req, res) => {});
 router.delete("/", (req, res) => {});
