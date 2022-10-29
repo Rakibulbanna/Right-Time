@@ -352,9 +352,8 @@ else {
   }
 });
 
-
 // partner delete section
-
+ 
 router.delete("/Service/:id", async (req, res) => {
   const query = await Partners.find({}).select('_id')
   const id = query[0]._id.toString();
@@ -436,8 +435,92 @@ router.delete("/Association/:id", async (req, res) => {
    
  });
 
+//partner update section
+router.put("/Service/:id",async(req,res)=>{
+  const query = await Partners.find({}).select('_id')
+  const id = query[0]._id.toString();
 
-router.put("/", (req, res) => {});
-router.delete("/", (req, res) => {});
+  await Partners.findOneAndUpdate({
+    _id: id, "ServicePartner._id": req.params.id
+  },
+    {
+      $set: {
+        "ServicePartner.$.name": req.body?.ServicePartnerName,
+        "ServicePartner.$.url": req.body?.ServicePartnerUrl,
+      },
+    },
+    {
+      useFindAndModify: false,
+      new: true,
+    }
+  ).exec((err, data) => {
+    if (err) {
+      res.status(500).json({ message: "ServicePartner updated failed!!" });
+    } else {
+      res.status(200).json({
+        message: "ServicePartner updated successfully",
+        // data: data,
+      });
+    }
+  });
+})
+
+router.put("/Solution/:id",async (req, res) => {
+  const query = await Partners.find({}).select('_id')
+  const id = query[0]._id.toString();
+
+      await Partners.findOneAndUpdate({
+        _id: id, "SolutionPartner._id": req.params.id
+      },
+        {
+          $set: {
+            "SolutionPartner.$.name": req.body?.SolutionPartnerName,
+            "SolutionPartner.$.url": req.body?.SolutionPartnerUrl,
+          },
+        },
+        {
+          useFindAndModify: false,
+          new: true,
+        }
+      ).exec((err, data) => {
+        if (err) {
+          res.status(500).json({ message: "SolutionPartner updated failed!!" });
+        } else {
+          res.status(200).json({
+            message: "SolutionPartner updated successfully",
+            // data: data,
+          });
+        }
+      });
+});
+
+router.put("/Association/:id",async(req,res)=>{
+  const query = await Partners.find({}).select('_id')
+  const id = query[0]._id.toString();
+
+  await Partners.findOneAndUpdate({
+    _id: id, "Association._id": req.params.id
+  },
+    {
+      $set: {
+        "Association.$.name": req.body?.AssociationName,
+        "Association.$.url": req.body?.AssociationUrl,
+      },
+    },
+    {
+      useFindAndModify: false,
+      new: true,
+    }
+  ).exec((err, data) => {
+    if (err) {
+      res.status(500).json({ message: "Association updated failed!!" });
+    } else {
+      res.status(200).json({
+        message: "Association updated successfully",
+        // data: data,
+      });
+    }
+  });
+})
 
 module.exports = router;
