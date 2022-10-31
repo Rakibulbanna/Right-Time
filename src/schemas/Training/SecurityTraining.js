@@ -12,7 +12,7 @@ const SecurityTraining = mongoose.Schema({
           },
           divTitle: {
             type: String,
-            require: true,
+            require: true,                                                             
           },
           divDescription: {
             type: String,

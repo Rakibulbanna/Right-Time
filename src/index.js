@@ -40,6 +40,15 @@ app.get("/", (req, res) => {
   res.send("server is running in 5001 port");
 });
 
+app.use((err,req,res,next)=>{
+  // because err.status is undefined 
+   res.status(404).json({
+       error : {
+           message : err.message
+      }
+   });
+})
+
 app.listen(5001, () => {
   console.log("server is running at 5001 port");
 });
