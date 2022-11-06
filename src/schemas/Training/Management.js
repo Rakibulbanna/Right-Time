@@ -4,6 +4,8 @@ const Management = mongoose.Schema({
     
         name: {
           type: String,
+          require: true,
+          unique: true
         },
         UI: {
           coverPhoto: {
