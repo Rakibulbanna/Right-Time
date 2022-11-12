@@ -5,6 +5,10 @@ const TeamMember = mongoose.Schema({
         type: String,
         require: true
     },
+    imgUrl:{
+        type:String
+    }
+    ,
     designation:{
         type: String,
         require: true

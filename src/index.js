@@ -9,6 +9,7 @@ const userHandler = require('./routeHandler/userHandler')
 const HomeHandler = require('./routeHandler/HomeHandler');
 const TrainingHandler = require('./routeHandler/TrainingHandler');
 const PartnerHandle = require('./routeHandler/PartnerHandle');
+const AboutHandler = require('./routeHandler/AboutHandler')
 
 app.use(express.json());
 require("dotenv").config();
@@ -34,6 +35,7 @@ mongoose
     app.use('/home',HomeHandler);
     app.use('/training',TrainingHandler);
     app.use('/partner',PartnerHandle);
+    app.use('/about',AboutHandler)
     
 
 app.get("/", (req, res) => {
