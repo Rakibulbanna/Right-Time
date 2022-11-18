@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 
 const PartnerCarousel = mongoose.Schema({
-    imgURL: {
+    photoURL: {
     type:String,
     required: true
     }
 })
 
-module.exports = PartnerCarousel;
+module.exports = mongoose.model('PartnerCarousel',PartnerCarousel);

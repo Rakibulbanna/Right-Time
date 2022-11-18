@@ -20,4 +20,4 @@ const ClientFeedBack = mongoose.Schema({
 
 });
 
-module.exports = ClientFeedBack;
+module.exports = mongoose.model('ClientFeedBack',ClientFeedBack);

@@ -11,7 +11,7 @@ const ServicesCarosor = mongoose.Schema({
         required: true,
     }
     ,
-    iconURL:{
+    photoURL:{
         type: String,
         required: true,
     }

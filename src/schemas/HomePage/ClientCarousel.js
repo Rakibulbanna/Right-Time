@@ -10,4 +10,4 @@ const ClientCarousel = mongoose.Schema({
 
 });
 
-module.exports = ClientCarousel;
+module.exports = mongoose.model('ClientCarousel',ClientCarousel);

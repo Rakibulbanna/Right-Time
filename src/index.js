@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 const cors = require("cors");
 const passport = require('passport');
 const app = express();
@@ -36,7 +37,8 @@ mongoose
     app.use('/training',TrainingHandler);
     app.use('/partner',PartnerHandle);
     app.use('/about',AboutHandler)
-    
+  
+app.use('/static', express.static(path.join(__dirname, '../uploaded_file')))
 
 app.get("/", (req, res) => {
   res.send("server is running in 5001 port");

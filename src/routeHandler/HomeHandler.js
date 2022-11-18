@@ -1,7 +1,11 @@
 const express = require("express");
 const AssociationCarosor = require("../schemas/HomePage/AssociationCarosor");
 const BannerCarosor = require("../schemas/HomePage/BannerCarosor");
+const ClientCarousel = require("../schemas/HomePage/ClientCarousel");
+const ClientFeedBack = require("../schemas/HomePage/ClientFeedBack");
+const PartnerCarousel = require("../schemas/HomePage/PartnerCarousel");
 const ServicesCarosor = require("../schemas/HomePage/ServicesCarosor");
+const upload = require("../util/upload");
 const { route } = require("./todoHandler");
 const router = express.Router();
 
@@ -9,72 +13,76 @@ const router = express.Router();
 
 router.get("/banner", async (req, res) => {
   try {
-    const data = await BannerCarosor.find();
+    const data = await BannerCarosor.find({});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
+router.get("/banner/:id", async (req, res) => {
+  try {
+    const data = await BannerCarosor.findOne({_id:req.params.id});
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send("server side error!");
   }
 });
 
-router.post("/banner", async (req, res) => {
-  const newBanner = new BannerCarosor(req.body);
-  try {
-    const size = await BannerCarosor.find();
+router.post("/banner", upload.single('photoURL'), async (req, res) => {
+ 
+  try { 
+    console.log(req.file)
+    const newBanner = new BannerCarosor({ ...req.body, photoURL: req.file });
 
-    if (size.length < 9) {
-      try {
-        const data = newBanner.save();
+        const data = await newBanner.save();
         res.status(200).json({
           message: "BannerCarosor inserted successfully",data:data
         });
-      } catch (err) {
-        res.status(500).send({
-          message: "server side error!",
-        });
-      }
-    } else {
-      res.status(500).send({
-        message: "more then 9 carosor are not allowed!,Insertion failed!",
-      });
-    }
+    
   } catch (err) {
+    console.log(err)
     res.status(500).send({
-      message: "server side error!",
+      message: "server side error 2!",
     });
   }
 });
 
-router.put("/banner", async (req, res) => {
-  //console.log(req.body)
-  await BannerCarosor.findOneAndUpdate(
-    { _id: req.body.id },
-    {
-      $set: {
-        title: req.body?.title,
-        subtitle: req.body?.subtitle,
-        photoURL: req.body?.photoURL,
-      },
+router.delete('/banner/:id',async(req,res)=>{
+  try{
+    await BannerCarosor.deleteOne({_id:req.params.id});
+    res.status(200).send({message:"banner deleted!"})
+  }catch(err){
+    res.status(200).json({ message: "server error!!" });
+  }
+})
+
+router.put('/banner/:id',async(req,res)=>{
+  try{
+    await BannerCarosor.updateOne({_id:req.params.id},{
+      $set:{
+        title:req.body?.title,
+        subtitle:req.body?.subtitle,
+        photoURL:req.body?.photoURL
+      }
     },
     {
       useFindAndModify: false,
       new: true,
-    }
-  ).exec((err, data) => {
-    if (err) {
-      res.status(500).json({ message: "updating error!" });
-    } else {
-      //console.log(data);
-      res.status(200).json({ message: "updated successfully!" });
-    }
-  });
-});
+    });
+    res.status(200).send({message:"banner updated successfully!!"})
+  }
+  catch(err){
+    res.status(200).json({ message: "server error!" });
+  }
+})
+
 
 // Service section
 
 router.post("/service", async (req, res) => {
   const NewServices = new ServicesCarosor(req.body);
       try {
-        const data = NewServices.save();
+        await NewServices.save();
         res.status(200).json({
           message: "New Services inserted successfully",
         });
@@ -87,22 +95,30 @@ router.post("/service", async (req, res) => {
 
 router.get('/service',async (req,res)=>{
   try {
-    const data = await ServicesCarosor.find();
+    const data = await ServicesCarosor.find({});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
+router.get('/service/:id',async (req,res)=>{
+  try {
+    const data = await ServicesCarosor.findOne({_id:req.params.id});
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send("server side error!");
   }
 });
 
-router.put("/service", async (req, res) => {
+router.put("/service/:id", async (req, res) => {
   //console.log(req.body)
   await ServicesCarosor.findOneAndUpdate(
-    { _id: req.body.id },
+    { _id: req.params.id },
     {
       $set: {
         title: req.body?.title,
         subtitle: req.body?.subtitle,
-        photoURL: req.body?.iconURL,
+        photoURL: req.body?.photoURL,
       },
     },
     {
@@ -132,11 +148,28 @@ await ServicesCarosor.deleteOne({_id : req.body.id},{},(err,data)=>{
 })
 
 // Association Carosor 
+router.get('/association',async (req,res)=>{
+  try {
+    const data = await AssociationCarosor.find({});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
+router.get('/association/:id',async (req,res)=>{
+  try {
+    const data = await AssociationCarosor.findOne({_id:req.params.id});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
+
 
 router.post("/association", async (req, res) => {
   const NewAssociation = new AssociationCarosor(req.body);
       try {
-        const data = NewAssociation.save();
+        await NewAssociation.save();
         res.status(200).json({
           message: "New Association inserted successfully",
         });
@@ -146,9 +179,9 @@ router.post("/association", async (req, res) => {
         });
       } 
 });
-router.delete('/association',async(req,res)=>{
+router.delete('/association/:id',async(req,res)=>{
   
-  await AssociationCarosor.deleteOne({_id:req.body.id},(err,data)=>{
+  await AssociationCarosor.deleteOne({_id:req.params.id},(err,data)=>{
     if (err) {
       res.status(500).json({ message: "Association Carosor deleteting error!" });
     } else {
@@ -157,11 +190,230 @@ router.delete('/association',async(req,res)=>{
     }
   })
   })
-
-  // partner carosel
+router.put('/association/:id',async(req,res)=>{
   
+  await AssociationCarosor.findOneAndUpdate(
+    { _id: req.params.id },
+    {
+      $set: {
+        photoURL: req.body?.photoURL,
+      },
+    },
+    {
+      useFindAndModify: false,
+      new: true,
+    }
+  ).exec((err, data) => {
+    if (err) {
+      res.status(500).json({ message: "association Carosor updating error!" });
+    } else {
+      //console.log(data);
+      res.status(200).json({ message: "association Carosor updated successfully!" });
+    }
+  });
+  })
+
+  // client feedback
+  router.get('/clientFeedback',async (req,res)=>{
+    try {
+      const data = await ClientFeedBack.find({});
+      res.status(200).json(data);
+    } catch (err) {
+      res.status(500).send("server side error!");
+    }
+  });
+  router.get('/clientFeedback/:id',async (req,res)=>{
+    try {
+      const data = await ClientFeedBack.findOne({_id:req.params.id});
+      res.status(200).json(data);
+    } catch (err) {
+      res.status(500).send("server side error!");
+    }
+  });
+  
+  
+  router.post("/clientFeedback", async (req, res) => {
+    const NewClientFeedBack = new ClientFeedBack(req.body);
+        try {
+          await NewClientFeedBack.save();
+          res.status(200).json({
+            message: "New ClientFeedBack inserted successfully",
+          });
+        } catch (err) {
+          res.status(500).send({
+            message: "server side error!",
+          });
+        } 
+  });
+  router.delete('/clientFeedback/:id',async(req,res)=>{
+    
+    await ClientFeedBack.deleteOne({_id:req.params.id},(err,data)=>{
+      if (err) {
+        res.status(500).json({ message: "ClientFeedBack Carosor deleteting error!" });
+      } else {
+        //console.log(data);
+        res.status(200).json({ message: "ClientFeedBack Carosor deleted successfully!",mongooseDeleteResult: data });
+      }
+    })
+    })
+  router.put('/clientFeedback/:id',async(req,res)=>{
+    
+    await ClientFeedBack.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          title:req.body?.title,
+          description:req.body?.description,
+          designation:req.body?.designation,
+          photoURL: req.body?.photoURL,
+        },
+      },
+      {
+        useFindAndModify: false,
+        new: true,
+      }
+    ).exec((err, data) => {
+      if (err) {
+        res.status(500).json({ message: "ClientFeedBack Carosor updating error!" });
+      } else {
+        //console.log(data);
+        res.status(200).json({ message: "ClientFeedBack Carosor updated successfully!" });
+      }
+    });
+    })
+
+  // ClientCarousel
+
+  router.get('/clientCarousel',async (req,res)=>{
+    try {
+      const data = await ClientCarousel.find({});
+      res.status(200).json(data);
+    } catch (err) {
+      res.status(500).send("server side error!");
+    }
+  });
+  router.get('/clientCarousel/:id',async (req,res)=>{
+    try {
+      const data = await ClientCarousel.findOne({_id:req.params.id});
+      res.status(200).json(data);
+    } catch (err) {
+      res.status(500).send("server side error!");
+    }
+  });
+  
+  
+  router.post("/clientCarousel", async (req, res) => {
+    const NewClientCarousel = new ClientCarousel(req.body);
+        try {
+          const data = await NewClientCarousel.save();
+          res.status(200).json({
+            message: "New ClientCarousel inserted successfully",
+          });
+        } catch (err) {
+          res.status(500).send({
+            message: "server side error!",
+          });
+        } 
+  });
+  router.delete('/clientCarousel/:id',async(req,res)=>{
+    
+    await ClientCarousel.deleteOne({_id:req.params.id},(err,data)=>{
+      if (err) {
+        res.status(500).json({ message: "ClientCarousel Carosor deleteting error!" });
+      } else {
+        //console.log(data);
+        res.status(200).json({ message: "ClientCarousel Carosor deleted successfully!",mongooseDeleteResult: data });
+      }
+    })
+    })
+  router.put('/clientCarousel/:id',async(req,res)=>{
+    
+    await ClientCarousel.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          photoURL: req.body?.photoURL,
+        },
+      },
+      {
+        useFindAndModify: false,
+        new: true,
+      }
+    ).exec((err, data) => {
+      if (err) {
+        res.status(500).json({ message: "ClientCarousel Carosor updating error!" });
+      } else {
+        //console.log(data);
+        res.status(200).json({ message: "ClientCarousel Carosor updated successfully!" });
+      }
+    });
+    })
+// PartnerCarousel
+
+router.get('/partnerCarousel',async (req,res)=>{
+  try {
+    const data = await PartnerCarousel.find({});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
+router.get('/partnerCarousel/:id',async (req,res)=>{
+  try {
+    const data = await PartnerCarousel.findOne({_id:req.params.id});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
 
 
+router.post("/partnerCarousel", async (req, res) => {
+  const NewPartnerCarousel = new ClientCarousel(req.body);
+      try {
+        await NewPartnerCarousel.save();
+        res.status(200).json({
+          message: "New PartnerCarousel inserted successfully",
+        });
+      } catch (err) {
+        res.status(500).send({
+          message: "server side error!",
+        });
+      } 
+});
+router.delete('/partnerCarousel/:id',async(req,res)=>{
+  
+  await PartnerCarousel.deleteOne({_id:req.params.id},(err,data)=>{
+    if (err) {
+      res.status(500).json({ message: "PartnerCarousel Carosor deleteting error!" });
+    } else {
+      //console.log(data);
+      res.status(200).json({ message: "PartnerCarousel Carosor deleted successfully!",mongooseDeleteResult: data });
+    }
+  })
+  })
+router.put('/partnerCarousel/:id',async(req,res)=>{
+  
+  await PartnerCarousel.findOneAndUpdate(
+    { _id: req.params.id },
+    {
+      $set: {
+        photoURL: req.body?.photoURL,
+      },
+    },
+    {
+      useFindAndModify: false,
+      new: true,
+    }
+  ).exec((err, data) => {
+    if (err) {
+      res.status(500).json({ message: "PartnerCarousel Carosor updating error!" });
+    } else {
+      //console.log(data);
+      res.status(200).json({ message: "PartnerCarousel Carosor updated successfully!" });
+    }
+  });
+  })
 
 
 module.exports = router;
