@@ -7,7 +7,7 @@ const Certification = mongoose.Schema({
           require: true,
           unique: true
         },
-        UI: {
+       
           coverPhoto: {
             type: String,
             require: true,
@@ -20,7 +20,7 @@ const Certification = mongoose.Schema({
             type: String,
             require: true,
           },
-        }
+        
       
 })
 module.exports = mongoose.model('CertificationServices',Certification);

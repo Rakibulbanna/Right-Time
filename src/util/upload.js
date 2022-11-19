@@ -139,10 +139,108 @@ const AssesmentUpload = multer({
   },
 });
 
+// Customized
+const CustomizedStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./Trainnig/Customized");
+  },
+  filename: (req, file, cb) => {
+      cb(null, file.originalname);
+  },
+});
+const CustomizedUpload = multer({
+  storage: CustomizedStorage,
+  limits: {
+    fileSize: 1024 * 1024 * 15,
+  },
+  fileFilter: (req, file, cb) => {
+    console.log(file)
+    if (file.fieldname === "coverPhoto" ) {
+      if (
+        file.mimetype === "image/jpeg" ||
+        file.mimetype === "image/jpg" ||
+        file.mimetype === "image/png"
+      ) {
+        cb(null, true);
+      } else {
+        cb(new Error("only jpg, png, jpeg file allowed !!"));
+      }
+    }  else {
+      cb(new Error("There was an unknown error !!"));
+    }
+  },
+});
+
+// Management
+const ManagementStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./Trainnig/Management");
+  },
+  filename: (req, file, cb) => {
+      cb(null, file.originalname);
+  },
+});
+const ManagementUpload = multer({
+  storage: ManagementStorage,
+  limits: {
+    fileSize: 1024 * 1024 * 15,
+  },
+  fileFilter: (req, file, cb) => {
+    console.log(file)
+    if (file.fieldname === "coverPhoto" ) {
+      if (
+        file.mimetype === "image/jpeg" ||
+        file.mimetype === "image/jpg" ||
+        file.mimetype === "image/png"
+      ) {
+        cb(null, true);
+      } else {
+        cb(new Error("only jpg, png, jpeg file allowed !!"));
+      }
+    }  else {
+      cb(new Error("There was an unknown error !!"));
+    }
+  },
+});
+
+// Security
+const SecurityStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./Trainnig/Security");
+  },
+  filename: (req, file, cb) => {
+      cb(null, file.originalname);
+  },
+});
+const SecurityUpload = multer({
+  storage: SecurityStorage,
+  limits: {
+    fileSize: 1024 * 1024 * 15,
+  },
+  fileFilter: (req, file, cb) => {
+    console.log(file)
+    if (file.fieldname === "coverPhoto" ) {
+      if (
+        file.mimetype === "image/jpeg" ||
+        file.mimetype === "image/jpg" ||
+        file.mimetype === "image/png"
+      ) {
+        cb(null, true);
+      } else {
+        cb(new Error("only jpg, png, jpeg file allowed !!"));
+      }
+    }  else {
+      cb(new Error("There was an unknown error !!"));
+    }
+  },
+});
 
 module.exports = {
   upload,
   AboutUpload,
   IndustriesUpload,
-  AssesmentUpload
+  AssesmentUpload,
+  CustomizedUpload,
+  ManagementUpload,
+  SecurityUpload
 };

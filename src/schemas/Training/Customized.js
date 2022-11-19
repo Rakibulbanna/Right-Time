@@ -7,7 +7,6 @@ const Customized = mongoose.Schema({
           require: true,
           unique: true
         },
-        UI: {
           coverPhoto: {
             type: String,
             require: true,
@@ -20,7 +19,7 @@ const Customized = mongoose.Schema({
             type: String,
             require: true,
           },
-        }
+        
       
 })
 module.exports = mongoose.model('Customized',Customized);

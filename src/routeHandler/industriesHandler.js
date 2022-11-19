@@ -24,9 +24,9 @@ router.get("/:id", async (req, res) => {
 });
 // CLIENT- Industries trainning get
 
-router.get("/:name", async (req, res) => {
+router.get("/name", async (req, res) => {
     try {
-      const data = await Industries.findOne({name:req.params.name});
+      const data = await Industries.findOne({name:req.body.name});
       res.status(200).json(data);
     } catch (err) {
       res.status(500).send("server side error!");

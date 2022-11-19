@@ -35,7 +35,7 @@ mongoose
     app.use('/user',userHandler);
     app.use('/home',HomeHandler);
     app.use('/training',TrainingHandler);
-    app.use('/partner',PartnerHandle);
+    app.use('/partners',PartnerHandle);
     app.use('/about',AboutHandler)
   
 app.use('/static', express.static(path.join(__dirname, '../uploaded_file')))

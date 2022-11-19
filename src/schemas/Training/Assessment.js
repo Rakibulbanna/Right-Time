@@ -11,8 +11,6 @@ const Assessment = mongoose.Schema({
             type: String,
             require: true,
           },
-        UI: {
-         
           divTitle: {
             type: String,
             require: true,
@@ -21,7 +19,7 @@ const Assessment = mongoose.Schema({
             type: String,
             require: true,
           },
-        }
+        
       
 })
 module.exports = mongoose.model('Assessment',Assessment);
