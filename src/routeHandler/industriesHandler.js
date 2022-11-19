@@ -1,10 +1,11 @@
 const express = require("express");
 const Industries = require("../schemas/Industries/Industries");
+const { IndustriesUpload } = require("../util/upload");
 const router = express.Router();
 
 // ADMIN- all Industries get
 
-router.get("/all", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
       const data = await Industries.find({});
   
@@ -13,7 +14,14 @@ router.get("/all", async (req, res) => {
       res.status(500).send("server side error!");
     }
   });
-
+router.get("/:id", async (req, res) => {
+    try {
+      const data = await Industries.findOne({_id:req.params.id});
+      res.status(200).json(data);
+    } catch (err) {
+      res.status(500).send("server side error!");
+    }
+});
 // CLIENT- Industries trainning get
 
 router.get("/:name", async (req, res) => {
@@ -27,9 +35,9 @@ router.get("/:name", async (req, res) => {
 
 //ADMIN- Industries post
 
-  router.post('/add',async (req,res)=>{
+  router.post('/',IndustriesUpload.single('coverPhoto'),async (req,res)=>{
     try {
-        const newIndustries = new Industries(req.body);
+        const newIndustries = new Industries({ ...req.body, coverPhoto: req.file.originalname });
         await newIndustries.save()
         res.status(200).json({message:"Industries added !"});
       } catch (err) {
@@ -39,14 +47,14 @@ router.get("/:name", async (req, res) => {
 
 //ADMIN- Industries update
 
-router.put('/IndustriesUpdate/:id',async (req,res)=>{
+router.put('/:id',IndustriesUpload.single('coverPhoto'),async (req,res)=>{
     try{
       await Industries.findByIdAndUpdate(
         {_id: req.params.id},
         {
           $set:{
             name:req.body?.name,
-            coverPhoto:req.body?.coverPhoto,
+            coverPhoto:req?.file?.originalname,
             div:req.body?.div
             
           }
@@ -67,7 +75,7 @@ router.put('/IndustriesUpdate/:id',async (req,res)=>{
 
 // DONE delete
 
-router.delete("/IndustriesDelete/:id",async(req,res)=>{
+router.delete("/:id",async(req,res)=>{
     try{
       await Industries.deleteOne({ _id:  req.params.id})
       res.status(200).send("Industries deleted!")

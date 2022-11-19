@@ -3,6 +3,7 @@ const Assessment = require("../schemas/Training/Assessment");
 const Customized = require("../schemas/Training/Customized");
 const Management = require("../schemas/Training/Management");
 const Security = require("../schemas/Training/SecurityTraining");
+const { AssesmentUpload } = require("../util/upload");
 
 const router = express.Router();
 
@@ -46,28 +47,28 @@ router.get("/allSecurity", async (req, res) => {
 
 //Edit Needed post
 
-router.post("/addAssessment", async (req, res) => {
+router.post("/addAssessment",AssesmentUpload.single('coverPhoto'), async (req, res) => {
   try {
-      const NewAssessment = new Assessment(req.body);
+      const NewAssessment = new Assessment({ ...req.body, coverPhoto: req.file.originalname });
       const data =await NewAssessment.save();
       //console.log(data)
       res.status(200).send("Assessment inserted")
   } 
   catch(err) {
-      if (err) {
+     
         if (err.code === 11000) {
           res.status(500).send("This Assessment is alrady taken!");
         } else {
            //console.log(err)
           res.status(500).send("server side error!");
         }
-      }
+      
   }
 });
 router.post("/addCustomized", async (req, res) => {
   
   try {
-    const NewCustomized = new Customized(req.body);
+    const NewCustomized = new Customized({ ...req.body, coverPhoto: req.file.originalname });
     await NewCustomized.save();
     res.status(200).send("Customized inserted");
   } 
@@ -84,7 +85,7 @@ router.post("/addCustomized", async (req, res) => {
 });
 router.post("/addManagement", async (req, res) => {
   try {
-    const NewManagement = new Management(req.body);
+    const NewManagement = new Management({ ...req.body, coverPhoto: req.file.originalname });
     await NewManagement.save();
     res.status(200).send("Management inserted");
   } 
@@ -101,7 +102,7 @@ router.post("/addManagement", async (req, res) => {
 });
 router.post("/addSecurity", async (req, res) => {
   try {
-    const NewSecurity = new Security(req.body);
+    const NewSecurity = new Security({ ...req.body, coverPhoto: req.file.originalname });
     await NewSecurity.save();
     res.status(200).send("Security inserted");
   } 

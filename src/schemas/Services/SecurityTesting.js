@@ -1,18 +1,17 @@
 const mongoose = require('mongoose');
 
-const Assessment = mongoose.Schema({
+const SecurityTesting = mongoose.Schema({
     
         name: {
           type: String,
           require: true,
           unique: true
-        }, 
-        coverPhoto: {
+        },
+        UI: {
+          coverPhoto: {
             type: String,
             require: true,
           },
-        UI: {
-         
           divTitle: {
             type: String,
             require: true,
@@ -24,4 +23,4 @@ const Assessment = mongoose.Schema({
         }
       
 })
-module.exports = mongoose.model('Assessment',Assessment);
+module.exports = mongoose.model('SecurityTestingServices',SecurityTesting);

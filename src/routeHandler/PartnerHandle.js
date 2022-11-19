@@ -4,7 +4,7 @@ const router = express.Router();
 
 //getting partner
 
-router.get("/Service", async (req, res) => {
+router.get("/service", async (req, res) => {
   try {
     const data = await Partners.find({}).select('ServicePartner');
 
@@ -13,7 +13,7 @@ router.get("/Service", async (req, res) => {
     res.status(500).send("server side error!");
   }
 });
-router.get("/Solution", async (req, res) => {
+router.get("/solution", async (req, res) => {
   try {
     const data = await Partners.find({}).select('SolutionPartner');
 
@@ -22,7 +22,7 @@ router.get("/Solution", async (req, res) => {
     res.status(500).send("server side error!");
   }
 });
-router.get("/Association", async (req, res) => {
+router.get("/association", async (req, res) => {
   try {
     const data = await Partners.find({}).select('Association');
 
@@ -354,7 +354,7 @@ else {
 
 // partner delete section
  
-router.delete("/Service/:id", async (req, res) => {
+router.delete("/service/:id", async (req, res) => {
   const query = await Partners.find({}).select('_id')
   const id = query[0]._id.toString();
   await Partners.findOneAndUpdate(
@@ -381,7 +381,7 @@ router.delete("/Service/:id", async (req, res) => {
    
  });
 
-router.delete("/Solution/:id", async (req, res) => {
+router.delete("/solution/:id", async (req, res) => {
   const query = await Partners.find({}).select('_id')
   const id = query[0]._id.toString();
   await Partners.findOneAndUpdate(
@@ -408,7 +408,7 @@ router.delete("/Solution/:id", async (req, res) => {
    
  });
 
-router.delete("/Association/:id", async (req, res) => {
+router.delete("/association/:id", async (req, res) => {
   const query = await Partners.find({}).select('_id')
   const id = query[0]._id.toString();
   await Partners.findOneAndUpdate(
@@ -436,7 +436,7 @@ router.delete("/Association/:id", async (req, res) => {
  });
 
 //partner update section
-router.put("/Service/:id",async(req,res)=>{
+router.put("/service/:id",async(req,res)=>{
   const query = await Partners.find({}).select('_id')
   const id = query[0]._id.toString();
 
@@ -465,7 +465,7 @@ router.put("/Service/:id",async(req,res)=>{
   });
 })
 
-router.put("/Solution/:id",async (req, res) => {
+router.put("/solution/:id",async (req, res) => {
   const query = await Partners.find({}).select('_id')
   const id = query[0]._id.toString();
 
@@ -494,7 +494,7 @@ router.put("/Solution/:id",async (req, res) => {
       });
 });
 
-router.put("/Association/:id",async(req,res)=>{
+router.put("/association/:id",async(req,res)=>{
   const query = await Partners.find({}).select('_id')
   const id = query[0]._id.toString();
 

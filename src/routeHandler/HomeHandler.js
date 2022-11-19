@@ -5,9 +5,10 @@ const ClientCarousel = require("../schemas/HomePage/ClientCarousel");
 const ClientFeedBack = require("../schemas/HomePage/ClientFeedBack");
 const PartnerCarousel = require("../schemas/HomePage/PartnerCarousel");
 const ServicesCarosor = require("../schemas/HomePage/ServicesCarosor");
-const upload = require("../util/upload");
-const { route } = require("./todoHandler");
+const { upload } = require("../util/upload");
+
 const router = express.Router();
+
 
 //Banner section
 
@@ -32,7 +33,7 @@ router.post("/banner", upload.single('photoURL'), async (req, res) => {
  
   try { 
     console.log(req.file)
-    const newBanner = new BannerCarosor({ ...req.body, photoURL: req.file });
+    const newBanner = new BannerCarosor({ ...req.body, photoURL: req.file.originalname });
 
         const data = await newBanner.save();
         res.status(200).json({
@@ -56,13 +57,13 @@ router.delete('/banner/:id',async(req,res)=>{
   }
 })
 
-router.put('/banner/:id',async(req,res)=>{
+router.put('/banner/:id', upload.single('photoURL'),async(req,res)=>{
   try{
     await BannerCarosor.updateOne({_id:req.params.id},{
       $set:{
         title:req.body?.title,
         subtitle:req.body?.subtitle,
-        photoURL:req.body?.photoURL
+        photoURL:req?.file?.originalname
       }
     },
     {
@@ -79,8 +80,8 @@ router.put('/banner/:id',async(req,res)=>{
 
 // Service section
 
-router.post("/service", async (req, res) => {
-  const NewServices = new ServicesCarosor(req.body);
+router.post("/service",upload.single('photoURL'), async (req, res) => {
+  const NewServices = new ServicesCarosor({ ...req.body, photoURL: req.file.originalname });
       try {
         await NewServices.save();
         res.status(200).json({
@@ -118,7 +119,7 @@ router.put("/service/:id", async (req, res) => {
       $set: {
         title: req.body?.title,
         subtitle: req.body?.subtitle,
-        photoURL: req.body?.photoURL,
+        photoURL: req?.file?.originalname,
       },
     },
     {
@@ -135,19 +136,20 @@ router.put("/service/:id", async (req, res) => {
   });
 });
 
-router.delete("/service",async(req,res)=>{
+router.delete("/service/:id",async(req,res)=>{
 
-await ServicesCarosor.deleteOne({_id : req.body.id},{},(err,data)=>{
+await ServicesCarosor.deleteOne({_id : req.params.id},{},(err,data)=>{
   if (err) {
     res.status(500).json({ message: "Services Carosor deleteting error!" });
   } else {
     //console.log(data);
-    res.status(200).json({ message: "Services Carosor deleted successfully!",mongooseDeleteResult: data });
+    res.status(200).json({ message: "Services Carosor deleted successfully!" });
   }
 })
 })
 
 // Association Carosor 
+
 router.get('/association',async (req,res)=>{
   try {
     const data = await AssociationCarosor.find({});
@@ -165,15 +167,16 @@ router.get('/association/:id',async (req,res)=>{
   }
 });
 
-
-router.post("/association", async (req, res) => {
-  const NewAssociation = new AssociationCarosor(req.body);
-      try {
+router.post("/association",upload.single('photoURL'), async (req, res) => {
+ 
+  try {
+        const NewAssociation = new AssociationCarosor({ ...req.body, photoURL: req.file.originalname });
         await NewAssociation.save();
         res.status(200).json({
           message: "New Association inserted successfully",
         });
       } catch (err) {
+        console.log(err)
         res.status(500).send({
           message: "server side error!",
         });
@@ -186,17 +189,17 @@ router.delete('/association/:id',async(req,res)=>{
       res.status(500).json({ message: "Association Carosor deleteting error!" });
     } else {
       //console.log(data);
-      res.status(200).json({ message: "Association Carosor deleted successfully!",mongooseDeleteResult: data });
+      res.status(200).json({ message: "Association Carosor deleted successfully!" });
     }
   })
   })
-router.put('/association/:id',async(req,res)=>{
+router.put('/association/:id',upload.single('photoURL'),async(req,res)=>{
   
   await AssociationCarosor.findOneAndUpdate(
     { _id: req.params.id },
     {
       $set: {
-        photoURL: req.body?.photoURL,
+        photoURL: req?.file?.originalname,
       },
     },
     {
@@ -212,8 +215,8 @@ router.put('/association/:id',async(req,res)=>{
     }
   });
   })
-
   // client feedback
+
   router.get('/clientFeedback',async (req,res)=>{
     try {
       const data = await ClientFeedBack.find({});
@@ -229,11 +232,9 @@ router.put('/association/:id',async(req,res)=>{
     } catch (err) {
       res.status(500).send("server side error!");
     }
-  });
-  
-  
-  router.post("/clientFeedback", async (req, res) => {
-    const NewClientFeedBack = new ClientFeedBack(req.body);
+  }); 
+  router.post("/clientFeedback",upload.single('photoURL'), async (req, res) => {
+    const NewClientFeedBack = new ClientFeedBack({ ...req.body, photoURL: req.file.originalname });
         try {
           await NewClientFeedBack.save();
           res.status(200).json({
@@ -252,11 +253,11 @@ router.put('/association/:id',async(req,res)=>{
         res.status(500).json({ message: "ClientFeedBack Carosor deleteting error!" });
       } else {
         //console.log(data);
-        res.status(200).json({ message: "ClientFeedBack Carosor deleted successfully!",mongooseDeleteResult: data });
+        res.status(200).json({ message: "ClientFeedBack Carosor deleted successfully!" });
       }
     })
-    })
-  router.put('/clientFeedback/:id',async(req,res)=>{
+  })
+  router.put('/clientFeedback/:id',upload.single('photoURL'),async(req,res)=>{
     
     await ClientFeedBack.findOneAndUpdate(
       { _id: req.params.id },
@@ -265,7 +266,7 @@ router.put('/association/:id',async(req,res)=>{
           title:req.body?.title,
           description:req.body?.description,
           designation:req.body?.designation,
-          photoURL: req.body?.photoURL,
+          photoURL: req.file?.originalname,
         },
       },
       {
@@ -300,10 +301,8 @@ router.put('/association/:id',async(req,res)=>{
       res.status(500).send("server side error!");
     }
   });
-  
-  
-  router.post("/clientCarousel", async (req, res) => {
-    const NewClientCarousel = new ClientCarousel(req.body);
+  router.post("/clientCarousel",upload.single('photoURL'), async (req, res) => {
+    const NewClientCarousel = new ClientCarousel({ ...req.body, photoURL: req.file.originalname });
         try {
           const data = await NewClientCarousel.save();
           res.status(200).json({
@@ -322,17 +321,17 @@ router.put('/association/:id',async(req,res)=>{
         res.status(500).json({ message: "ClientCarousel Carosor deleteting error!" });
       } else {
         //console.log(data);
-        res.status(200).json({ message: "ClientCarousel Carosor deleted successfully!",mongooseDeleteResult: data });
+        res.status(200).json({ message: "ClientCarousel Carosor deleted successfully!"});
       }
     })
     })
-  router.put('/clientCarousel/:id',async(req,res)=>{
+  router.put('/clientCarousel/:id',upload.single('photoURL'),async(req,res)=>{
     
     await ClientCarousel.findOneAndUpdate(
       { _id: req.params.id },
       {
         $set: {
-          photoURL: req.body?.photoURL,
+          photoURL: req.file?.originalname,
         },
       },
       {
@@ -366,10 +365,8 @@ router.get('/partnerCarousel/:id',async (req,res)=>{
     res.status(500).send("server side error!");
   }
 });
-
-
-router.post("/partnerCarousel", async (req, res) => {
-  const NewPartnerCarousel = new ClientCarousel(req.body);
+router.post("/partnerCarousel",upload.single('photoURL'), async (req, res) => {
+  const NewPartnerCarousel = new ClientCarousel({ ...req.body, photoURL: req.file.originalname });
       try {
         await NewPartnerCarousel.save();
         res.status(200).json({
@@ -388,17 +385,17 @@ router.delete('/partnerCarousel/:id',async(req,res)=>{
       res.status(500).json({ message: "PartnerCarousel Carosor deleteting error!" });
     } else {
       //console.log(data);
-      res.status(200).json({ message: "PartnerCarousel Carosor deleted successfully!",mongooseDeleteResult: data });
+      res.status(200).json({ message: "PartnerCarousel Carosor deleted successfully!" });
     }
   })
   })
-router.put('/partnerCarousel/:id',async(req,res)=>{
+router.put('/partnerCarousel/:id',upload.single('photoURL'),async(req,res)=>{
   
   await PartnerCarousel.findOneAndUpdate(
     { _id: req.params.id },
     {
       $set: {
-        photoURL: req.body?.photoURL,
+        photoURL: req.file?.originalname,
       },
     },
     {
