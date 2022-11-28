@@ -85,7 +85,7 @@ router.get('/teamMember/:id',async(req,res)=>{
 
     }catch(err){
         res.status(500).send({message:"server error!"})
-    }
+    }   
 })
 router.post('/teamMember',AboutUpload.single('imgUrl'),async(req,res)=>{
     try{

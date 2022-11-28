@@ -366,7 +366,8 @@ router.get('/partnerCarousel/:id',async (req,res)=>{
   }
 });
 router.post("/partnerCarousel",upload.single('photoURL'), async (req, res) => {
-  const NewPartnerCarousel = new ClientCarousel({ ...req.body, photoURL: req.file.originalname });
+  console.log({ ...req.body, photoURL: req.file.originalname })
+  const NewPartnerCarousel = new PartnerCarousel({ ...req.body, photoURL: req.file.originalname });
       try {
         await NewPartnerCarousel.save();
         res.status(200).json({
