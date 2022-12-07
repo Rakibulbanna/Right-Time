@@ -2,7 +2,8 @@ const express = require("express");
 const Industries = require("../schemas/Industries/Industries");
 const { IndustriesUpload } = require("../util/upload");
 const router = express.Router();
-
+const fs = require('fs')
+const path = require('path')
 // ADMIN- all Industries get
 
 router.get("/", async (req, res) => {
@@ -41,10 +42,24 @@ router.get("/name", async (req, res) => {
         await newIndustries.save()
         res.status(200).json({message:"Industries added !"});
       } catch (err) {
+        console.log(err)
         res.status(500).send({message:"server side error!"});
       }
 })
 
+
+router.delete('/:id',async(req,res)=>{
+//const filePath = path.join(__dirname, '../uploaded_file')
+try{
+const filePath = path.join("./Industries_upload",req.params.id);
+fs.unlinkSync(filePath)
+res.status(200).send("file delete success!")
+}catch(err){
+  console.log(err)
+res.status(500).send("failed")
+}
+
+})
 //ADMIN- Industries update
 
 router.put('/:id',IndustriesUpload.single('coverPhoto'),async (req,res)=>{

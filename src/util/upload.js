@@ -79,7 +79,11 @@ const IndustriesStorage = multer.diskStorage({
     cb(null, "./Industries_upload");
   },
   filename: (req, file, cb) => {
-      cb(null, file.originalname);
+    const fileExtension = path.extname(file.originalname);
+    const fileName = file.originalname.replace(fileExtension, "").toLowerCase().split(" ").join("-") + Date.now();
+
+    cb(null, fileName + fileExtension);
+    //  cb(null, file.originalname);
   },
 });
 const IndustriesUpload = multer({

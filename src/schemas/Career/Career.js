@@ -6,7 +6,7 @@ const Career = mongoose.Schema({
   },
   coverPhoto: {
     type: String,
-    require: true,
+    
   },
   description: {
     type: String,
