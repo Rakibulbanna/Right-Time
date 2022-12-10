@@ -1,7 +1,7 @@
 const express = require("express");
 const Industries = require("../schemas/Industries/Industries");
-
 const router = express.Router();
+
 const fs = require('fs')
 const path = require('path');
 const { upload } = require("../util/upload");

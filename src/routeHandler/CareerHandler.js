@@ -2,7 +2,8 @@ const express = require('express');
 const Career = require('../schemas/Career/Career');
 const router = express.Router();
 const fs = require('fs')
-const path = require('path')
+const path = require('path');
+const { upload } = require('../util/upload');
 
 // career
 /*
