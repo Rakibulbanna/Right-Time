@@ -19,7 +19,14 @@ const upload = multer({
   },
   fileFilter: (req, file, cb) => {
     console.log(file)
-    if (file.fieldname === "photoURL" || file.fieldname === "images" || file.fieldname === "gallery" || file.fieldname === "avater_1" || file.fieldname === "avater_2") {
+    if (file.fieldname === "photoURL" ||
+      file.fieldname === "images" ||
+      file.fieldname === "gallery" ||
+      file.fieldname === "avater_1" ||
+      file.fieldname === "avater_2" ||
+      file.fieldname === "imgUrl" ||
+      file.filename === "coverPhoto") {
+        
       if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/jpg" ||
@@ -47,7 +54,7 @@ const Aboutstorage = multer.diskStorage({
     cb(null, "./About_file");
   },
   filename: (req, file, cb) => {
-      cb(null, file.originalname);
+    cb(null, file.originalname);
   },
 });
 const AboutUpload = multer({
@@ -57,7 +64,7 @@ const AboutUpload = multer({
   },
   fileFilter: (req, file, cb) => {
     console.log(file)
-    if (file.fieldname === "imgUrl" ) {
+    if (file.fieldname === "imgUrl") {
       if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/jpg" ||
@@ -67,7 +74,7 @@ const AboutUpload = multer({
       } else {
         cb(new Error("only jpg, png, jpeg file allowed !!"));
       }
-    }  else {
+    } else {
       cb(new Error("There was an unknown error !!"));
     }
   },
@@ -79,11 +86,11 @@ const IndustriesStorage = multer.diskStorage({
     cb(null, "./Industries_upload");
   },
   filename: (req, file, cb) => {
-    const fileExtension = path.extname(file.originalname);
-    const fileName = file.originalname.replace(fileExtension, "").toLowerCase().split(" ").join("-") + Date.now();
+    // const fileExtension = path.extname(file.originalname);
+    // const fileName = file.originalname.replace(fileExtension, "").toLowerCase().split(" ").join("-") + Date.now();
 
-    cb(null, fileName + fileExtension);
-    //  cb(null, file.originalname);
+    // cb(null, fileName + fileExtension);
+    cb(null, file.originalname);
   },
 });
 const IndustriesUpload = multer({
@@ -93,7 +100,7 @@ const IndustriesUpload = multer({
   },
   fileFilter: (req, file, cb) => {
     console.log(file)
-    if (file.fieldname === "coverPhoto" ) {
+    if (file.fieldname === "coverPhoto") {
       if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/jpg" ||
@@ -103,7 +110,7 @@ const IndustriesUpload = multer({
       } else {
         cb(new Error("only jpg, png, jpeg file allowed !!"));
       }
-    }  else {
+    } else {
       cb(new Error("There was an unknown error !!"));
     }
   },
@@ -117,7 +124,7 @@ const AssesmentStorage = multer.diskStorage({
     cb(null, "./Trainnig/Assessment");
   },
   filename: (req, file, cb) => {
-      cb(null, file.originalname);
+    cb(null, file.originalname);
   },
 });
 const AssesmentUpload = multer({
@@ -127,7 +134,7 @@ const AssesmentUpload = multer({
   },
   fileFilter: (req, file, cb) => {
     console.log(file)
-    if (file.fieldname === "coverPhoto" ) {
+    if (file.fieldname === "coverPhoto") {
       if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/jpg" ||
@@ -137,7 +144,7 @@ const AssesmentUpload = multer({
       } else {
         cb(new Error("only jpg, png, jpeg file allowed !!"));
       }
-    }  else {
+    } else {
       cb(new Error("There was an unknown error !!"));
     }
   },
@@ -149,7 +156,7 @@ const CustomizedStorage = multer.diskStorage({
     cb(null, "./Trainnig/Customized");
   },
   filename: (req, file, cb) => {
-      cb(null, file.originalname);
+    cb(null, file.originalname);
   },
 });
 const CustomizedUpload = multer({
@@ -159,7 +166,7 @@ const CustomizedUpload = multer({
   },
   fileFilter: (req, file, cb) => {
     console.log(file)
-    if (file.fieldname === "coverPhoto" ) {
+    if (file.fieldname === "coverPhoto") {
       if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/jpg" ||
@@ -169,7 +176,7 @@ const CustomizedUpload = multer({
       } else {
         cb(new Error("only jpg, png, jpeg file allowed !!"));
       }
-    }  else {
+    } else {
       cb(new Error("There was an unknown error !!"));
     }
   },
@@ -181,7 +188,7 @@ const ManagementStorage = multer.diskStorage({
     cb(null, "./Trainnig/Management");
   },
   filename: (req, file, cb) => {
-      cb(null, file.originalname);
+    cb(null, file.originalname);
   },
 });
 const ManagementUpload = multer({
@@ -191,7 +198,7 @@ const ManagementUpload = multer({
   },
   fileFilter: (req, file, cb) => {
     console.log(file)
-    if (file.fieldname === "coverPhoto" ) {
+    if (file.fieldname === "coverPhoto") {
       if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/jpg" ||
@@ -201,7 +208,7 @@ const ManagementUpload = multer({
       } else {
         cb(new Error("only jpg, png, jpeg file allowed !!"));
       }
-    }  else {
+    } else {
       cb(new Error("There was an unknown error !!"));
     }
   },
@@ -213,7 +220,7 @@ const SecurityStorage = multer.diskStorage({
     cb(null, "./Trainnig/Security");
   },
   filename: (req, file, cb) => {
-      cb(null, file.originalname);
+    cb(null, file.originalname);
   },
 });
 const SecurityUpload = multer({
@@ -223,7 +230,7 @@ const SecurityUpload = multer({
   },
   fileFilter: (req, file, cb) => {
     console.log(file)
-    if (file.fieldname === "coverPhoto" ) {
+    if (file.fieldname === "coverPhoto") {
       if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/jpg" ||
@@ -233,7 +240,7 @@ const SecurityUpload = multer({
       } else {
         cb(new Error("only jpg, png, jpeg file allowed !!"));
       }
-    }  else {
+    } else {
       cb(new Error("There was an unknown error !!"));
     }
   },
@@ -246,7 +253,7 @@ const AuditingStorage = multer.diskStorage({
     cb(null, "./Services/Auditing");
   },
   filename: (req, file, cb) => {
-      cb(null, file.originalname);
+    cb(null, file.originalname);
   },
 });
 const AuditingUpload = multer({
@@ -256,7 +263,7 @@ const AuditingUpload = multer({
   },
   fileFilter: (req, file, cb) => {
     console.log(file)
-    if (file.fieldname === "coverPhoto" ) {
+    if (file.fieldname === "coverPhoto") {
       if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/jpg" ||
@@ -266,7 +273,7 @@ const AuditingUpload = multer({
       } else {
         cb(new Error("only jpg, png, jpeg file allowed !!"));
       }
-    }  else {
+    } else {
       cb(new Error("There was an unknown error !!"));
     }
   },
@@ -277,7 +284,7 @@ const CertificationStorage = multer.diskStorage({
     cb(null, "./Services/Certification");
   },
   filename: (req, file, cb) => {
-      cb(null, file.originalname);
+    cb(null, file.originalname);
   },
 });
 const CertificationUpload = multer({
@@ -287,7 +294,7 @@ const CertificationUpload = multer({
   },
   fileFilter: (req, file, cb) => {
     console.log(file)
-    if (file.fieldname === "coverPhoto" ) {
+    if (file.fieldname === "coverPhoto") {
       if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/jpg" ||
@@ -297,7 +304,7 @@ const CertificationUpload = multer({
       } else {
         cb(new Error("only jpg, png, jpeg file allowed !!"));
       }
-    }  else {
+    } else {
       cb(new Error("There was an unknown error !!"));
     }
   },
@@ -308,7 +315,7 @@ const ConsultationStorage = multer.diskStorage({
     cb(null, "./Services/Consultation");
   },
   filename: (req, file, cb) => {
-      cb(null, file.originalname);
+    cb(null, file.originalname);
   },
 });
 const ConsultationUpload = multer({
@@ -318,7 +325,7 @@ const ConsultationUpload = multer({
   },
   fileFilter: (req, file, cb) => {
     console.log(file)
-    if (file.fieldname === "coverPhoto" ) {
+    if (file.fieldname === "coverPhoto") {
       if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/jpg" ||
@@ -328,7 +335,7 @@ const ConsultationUpload = multer({
       } else {
         cb(new Error("only jpg, png, jpeg file allowed !!"));
       }
-    }  else {
+    } else {
       cb(new Error("There was an unknown error !!"));
     }
   },
@@ -339,7 +346,7 @@ const SecurityTestingStorage = multer.diskStorage({
     cb(null, "./Services/SecurityTesting");
   },
   filename: (req, file, cb) => {
-      cb(null, file.originalname);
+    cb(null, file.originalname);
   },
 });
 const SecurityTestingUpload = multer({
@@ -349,7 +356,7 @@ const SecurityTestingUpload = multer({
   },
   fileFilter: (req, file, cb) => {
     console.log(file)
-    if (file.fieldname === "coverPhoto" ) {
+    if (file.fieldname === "coverPhoto") {
       if (
         file.mimetype === "image/jpeg" ||
         file.mimetype === "image/jpg" ||
@@ -359,7 +366,7 @@ const SecurityTestingUpload = multer({
       } else {
         cb(new Error("only jpg, png, jpeg file allowed !!"));
       }
-    }  else {
+    } else {
       cb(new Error("There was an unknown error !!"));
     }
   },

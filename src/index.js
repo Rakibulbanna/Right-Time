@@ -12,6 +12,9 @@ const TrainingHandler = require('./routeHandler/TrainingHandler');
 const PartnerHandle = require('./routeHandler/PartnerHandle');
 const AboutHandler = require('./routeHandler/AboutHandler')
 const IndustriesHandler = require('./routeHandler/industriesHandler')
+const ContactHandler = require('./routeHandler/ContactHandler')
+const CareerHandler = require('./routeHandler/CareerHandler')
+
 app.use(express.json());
 require("dotenv").config();
 
@@ -37,7 +40,8 @@ mongoose
     app.use('/training',TrainingHandler);
     app.use('/partners',PartnerHandle);
     app.use('/about',AboutHandler)
-    app.use('/career',AboutHandler)
+    app.use('/career',CareerHandler)
+    app.use('/contact',ContactHandler)
 
   
 app.use('/static', express.static(path.join(__dirname, '../uploaded_file')))
