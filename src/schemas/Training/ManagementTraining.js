@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Management = mongoose.Schema({
+const ManagementTraining = mongoose.Schema({
     
         name: {
           type: String,
@@ -23,4 +23,4 @@ const Management = mongoose.Schema({
         
       
 })
-module.exports = mongoose.model('Management',Management);
+module.exports = mongoose.model('ManagementTraining',ManagementTraining);

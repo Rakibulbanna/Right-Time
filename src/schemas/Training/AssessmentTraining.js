@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Assessment = mongoose.Schema({
+const AssessmentTraining = mongoose.Schema({
     
         name: {
           type: String,
@@ -22,4 +22,4 @@ const Assessment = mongoose.Schema({
         
       
 })
-module.exports = mongoose.model('Assessment',Assessment);
+module.exports = mongoose.model('AssessmentTraining',AssessmentTraining);

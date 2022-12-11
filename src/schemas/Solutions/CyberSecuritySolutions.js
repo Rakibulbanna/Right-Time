@@ -1,10 +1,11 @@
 const mongoose = require('mongoose')
 
-const Solutions = mongoose.Schema({
+const CyberSecuritySolutions = mongoose.Schema({
+
     name:{
         type:String
     },
-    UI:{
+   
         coverPhoto:{
             type:String,
             require: true
@@ -17,7 +18,7 @@ const Solutions = mongoose.Schema({
             type: String,
             require: true
         },
-    },
+    
     // BurpSuite,
     // Acunetix,
     // Netsparker,
@@ -28,4 +29,4 @@ const Solutions = mongoose.Schema({
     // SmartContract
 })
 
-module.exports = mongoose.model("Solutions",Solutions);
+module.exports = mongoose.model("CyberSecuritySolutions",CyberSecuritySolutions);

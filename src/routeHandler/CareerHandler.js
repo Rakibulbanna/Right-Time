@@ -41,6 +41,7 @@ router.get('/:id', async (req, res) => {
 })
 router.post('/', upload.single('coverPhoto'), async (req, res) => {
     try {
+        console.log(req.body,req.file)
         const newCareer = new Career({ ...req.body, coverPhoto: req.file.originalname })
         await newCareer.save()
 

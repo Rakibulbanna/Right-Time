@@ -15,6 +15,8 @@ const IndustriesHandler = require('./routeHandler/industriesHandler')
 const ContactHandler = require('./routeHandler/ContactHandler')
 const CareerHandler = require('./routeHandler/CareerHandler')
 const ServicesHandler = require('./routeHandler/ServicesHandler')
+const SolutionsHandler = require('./routeHandler/SolutionsHandler')
+
 app.use(express.json());
 require("dotenv").config();
 
@@ -43,6 +45,7 @@ mongoose
     app.use('/about',AboutHandler)
     app.use('/career',CareerHandler)
     app.use('/contact',ContactHandler)
+    app.use('/solutions',SolutionsHandler)
 
   
 app.use('/static', express.static(path.join(__dirname, '../uploaded_file')))

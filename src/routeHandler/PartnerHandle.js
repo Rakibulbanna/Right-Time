@@ -2,7 +2,17 @@ const express = require("express");
 const Partners = require("../schemas/Partners/Partners");
 const router = express.Router();
 
+router.get("/", async (req, res) => {
+  try {
+    const data = await Partners.find({})
+
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
 //getting partner
+
 
 router.get("/service", async (req, res) => {
   try {
@@ -31,6 +41,43 @@ router.get("/association", async (req, res) => {
     res.status(500).send("server side error!");
   }
 });
+// getting by id
+
+router.get("/service/:id", async (req, res) => {
+  try {
+    
+    const data = await Partners.find({}).select('ServicePartner');
+    const id = req.params.id
+    const temp = data[0].ServicePartner;
+   const serviceData = temp?.find(i=> i._id==id)
+
+    res.status(200).json(serviceData);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
+router.get("/solution/:id", async (req, res) => {
+  try {
+    const data = await Partners.find({}).select('SolutionPartner');
+    const id = req.params.id
+    const temp = data[0].SolutionPartner;
+   const SolutionPartnerData = temp?.find(i=> i._id==id)
+    res.status(200).json(SolutionPartnerData);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
+router.get("/association/:id", async (req, res) => {
+  try {
+    const data = await Partners.find({}).select('Association');
+    const id = req.params.id
+    const temp = data[0].Association;
+   const AssociationPartnerData = temp?.find(i=> i._id==id)
+    res.status(200).json(AssociationPartnerData);
+  } catch (err) {
+    res.status(500).send("server side error!");
+  }
+});
 
 //partner Insert Section
 
@@ -38,20 +85,20 @@ const firstInsert = async (e) => {
   const newCollection = Partners({
     ServicePartner: [
       {
-        name: e?.ServicePartnerName || "",
-        url: e?.ServicePartnerUrl || "",
+        name: e?.name || "",
+        url: e?.url || "",
       },
     ],
     SolutionPartner: [
       {
-        name: e?.SolutionPartnerName || "",
-        url: e?.SolutionPartnerUrl || "",
+        name: e?.name || "",
+        url: e?.url || "",
       },
     ],
     Association: [
       {
-        name: e?.AssociationName || "",
-        url: e?.AssociationUrl || "",
+        name: e?.name || "",
+        url: e?.url || "",
       },
     ],
   });
@@ -93,8 +140,8 @@ console.log(p_id,"   ",c_id)
       },
         {
           $set: {
-            "ServicePartner.$.name": req.body?.ServicePartnerName,
-            "ServicePartner.$.url": req.body?.ServicePartnerUrl,
+            "ServicePartner.$.name": req.body?.name,
+            "ServicePartner.$.url": req.body?.url,
           },
         },
         {
@@ -121,8 +168,8 @@ console.log(p_id,"   ",c_id)
         {
           $push: {
             ServicePartner: {
-              name: req.body?.ServicePartnerName || "",
-              url: req.body?.ServicePartnerUrl || "",
+              name: req.body?.name || "",
+              url: req.body?.url || "",
             },
           },
         },
@@ -142,8 +189,8 @@ else {
     await Partners.findOneAndUpdate(
       {
         $set: {
-          "ServicePartnerName.$.name": req.body?.ServicePartnerName,
-          "ServicePartnerUrl.$.url": req.body?.ServicePartnerUrl,
+          "ServicePartnerName.$.name": req.body?.name,
+          "ServicePartnerUrl.$.url": req.body?.url,
         },
       },
       {
@@ -164,6 +211,9 @@ else {
 });
 
 router.post("/addSolution", async (req, res) => {
+
+  console.log('--------------ooopppp',req.body)
+
   const dataCount = await Partners.countDocuments({});
 
   if (dataCount === 1) {
@@ -189,8 +239,8 @@ console.log(p_id,"   ",c_id)
       },
         {
           $set: {
-            "SolutionPartner.$.name": req.body?.SolutionPartnerName,
-            "SolutionPartner.$.url": req.body?.SolutionPartnerUrl,
+            "SolutionPartner.$.name": req.body?.name,
+            "SolutionPartner.$.url": req.body?.url,
           },
         },
         {
@@ -216,8 +266,8 @@ console.log(p_id,"   ",c_id)
         {
           $push: {
             SolutionPartner: {
-              name: req.body?.SolutionPartnerName || "",
-              url: req.body?.SolutionPartnerUrl || "",
+              name: req.body?.name || "",
+              url: req.body?.url || "",
             },
           },
         },
@@ -237,8 +287,8 @@ else {
     await Partners.findOneAndUpdate(
       {
         $set: {
-          "SolutionPartnerName.$.name": req.body?.SolutionPartnerName,
-          "SolutionPartnerUrl.$.url": req.body?.SolutionPartnerUrl,
+          "SolutionPartnerName.$.name": req.body?.name,
+          "SolutionPartnerUrl.$.url": req.body?.url,
         },
       },
       {
@@ -284,8 +334,8 @@ console.log(p_id,"   ",c_id)
       },
         {
           $set: {
-            "Association.$.name": req.body?.AssociationName,
-            "Association.$.url": req.body?.AssociationUrl,
+            "Association.$.name": req.body?.name,
+            "Association.$.url": req.body?.url,
           },
         },
         {
@@ -311,8 +361,8 @@ console.log(p_id,"   ",c_id)
         {
           $push: {
             Association: {
-              name: req.body?.AssociationName || "",
-              url: req.body?.AssociationUrl || "",
+              name: req.body?.name || "",
+              url: req.body?.url || "",
             },
           },
         },
@@ -332,8 +382,8 @@ else {
     await Partners.findOneAndUpdate(
       {
         $set: {
-          "AssociationName.$.name": req.body?.AssociationName,
-          "AssociationUrl.$.url": req.body?.AssociationUrl,
+          "AssociationName.$.name": req.body?.name,
+          "AssociationUrl.$.url": req.body?.url,
         },
       },
       {
@@ -446,8 +496,8 @@ router.put("/service/:id",async(req,res)=>{
   },
     {
       $set: {
-        "ServicePartner.$.name": req.body?.ServicePartnerName,
-        "ServicePartner.$.url": req.body?.ServicePartnerUrl,
+        "ServicePartner.$.name": req.body?.name,
+        "ServicePartner.$.url": req.body?.url,
       },
     },
     {
@@ -475,8 +525,8 @@ router.put("/solution/:id",async (req, res) => {
       },
         {
           $set: {
-            "SolutionPartner.$.name": req.body?.SolutionPartnerName,
-            "SolutionPartner.$.url": req.body?.SolutionPartnerUrl,
+            "SolutionPartner.$.name": req.body?.name,
+            "SolutionPartner.$.url": req.body?.url,
           },
         },
         {
@@ -504,8 +554,8 @@ router.put("/association/:id",async(req,res)=>{
   },
     {
       $set: {
-        "Association.$.name": req.body?.AssociationName,
-        "Association.$.url": req.body?.AssociationUrl,
+        "Association.$.name": req.body?.name,
+        "Association.$.url": req.body?.url,
       },
     },
     {

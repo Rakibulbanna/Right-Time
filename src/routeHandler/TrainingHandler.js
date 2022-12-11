@@ -1,16 +1,18 @@
 const express = require("express");
-const Assessment = require("../schemas/Training/Assessment");
-const Customized = require("../schemas/Training/Customized");
-const Management = require("../schemas/Training/Management");
-const Security = require("../schemas/Training/SecurityTraining");
-const { AssesmentUpload, CustomizedUpload, ManagementUpload, SecurityUpload } = require("../util/upload");
+const AssessmentTraining = require("../schemas/Training/AssessmentTraining");
+const CustomizedTraining = require("../schemas/Training/CustomizedTraining");
+const ManagementTraining = require("../schemas/Training/ManagementTraining");
+const SecurityTraining = require("../schemas/Training/SecurityTraining");
+const { upload } = require("../util/upload");
+const fs = require('fs')
+const path = require('path');
 
 const router = express.Router();
 
 //DONE get
 router.get("/allAssesment", async (req, res) => {
   try {
-    const data = await Assessment.find({});
+    const data = await AssessmentTraining.find({});
 
     res.status(200).json(data);
   } catch (err) {
@@ -19,7 +21,7 @@ router.get("/allAssesment", async (req, res) => {
 });
 router.get("/allCustomized", async (req, res) => {
   try {
-    const data = await Customized.find({});
+    const data = await CustomizedTraining.find({});
 
     res.status(200).json(data);
   } catch (err) {
@@ -28,7 +30,7 @@ router.get("/allCustomized", async (req, res) => {
 });
 router.get("/allManagement", async (req, res) => {
   try {
-    const data = await Management.find({});
+    const data = await ManagementTraining.find({});
 
     res.status(200).json(data);
   } catch (err) {
@@ -37,7 +39,7 @@ router.get("/allManagement", async (req, res) => {
 });
 router.get("/allSecurity", async (req, res) => {
   try {
-    const data = await Security.find({});
+    const data = await SecurityTraining.find({});
 
     res.status(200).json(data);
   } catch (err) {
@@ -46,36 +48,36 @@ router.get("/allSecurity", async (req, res) => {
 });
 
 // DONE  get single 
-router.get("/assesment/:name", async (req, res) => {
+router.get("/assesment/:id", async (req, res) => {
   try {
-    const data = await Assessment.findOne({name:req.params.name});
+    const data = await AssessmentTraining.findOne({_id:req.params.id});
 
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send("server side error!");
   }
 });
-router.get("/customized/:name", async (req, res) => {
+router.get("/customized/:id", async (req, res) => {
   try {
-    const data = await Customized.findOne({name:req.params.name});
+    const data = await CustomizedTraining.findOne({_id:req.params.id});
 
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send("server side error!");
   }
 });
-router.get("/management/:name", async (req, res) => {
+router.get("/management/:id", async (req, res) => {
   try {
-    const data = await Management.findOne({name:req.params.name});
+    const data = await ManagementTraining.findOne({_id:req.params.id});
 
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send("server side error!");
   }
 });
-router.get("/security/:name", async (req, res) => {
+router.get("/security/:id", async (req, res) => {
   try {
-    const data = await Security.findOne({name:req.params.name});
+    const data = await SecurityTraining.findOne({_id:req.params.id});
 
     res.status(200).json(data);
   } catch (err) {
@@ -85,9 +87,9 @@ router.get("/security/:name", async (req, res) => {
 
 //DONE post
 
-router.post("/addAssessment", AssesmentUpload.single('coverPhoto'), async (req, res) => {
+router.post("/addAssessment", upload.single('coverPhoto'), async (req, res) => {
   try {
-    const NewAssessment = new Assessment({ ...req.body, coverPhoto: req.file.originalname });
+    const NewAssessment = new AssessmentTraining({ ...req.body, coverPhoto: req.file.originalname });
     await NewAssessment.save();
     //console.log(data)
     res.status(200).send("Assessment inserted")
@@ -103,10 +105,10 @@ router.post("/addAssessment", AssesmentUpload.single('coverPhoto'), async (req, 
 
   }
 });
-router.post("/addCustomized", CustomizedUpload.single('coverPhoto'), async (req, res) => {
+router.post("/addCustomized", upload.single('coverPhoto'), async (req, res) => {
 
   try {
-    const NewCustomized = new Customized({ ...req.body, coverPhoto: req.file.originalname });
+    const NewCustomized = new CustomizedTraining({ ...req.body, coverPhoto: req.file.originalname });
     await NewCustomized.save();
     res.status(200).send("Customized inserted");
   }
@@ -121,9 +123,9 @@ router.post("/addCustomized", CustomizedUpload.single('coverPhoto'), async (req,
     }
   }
 });
-router.post("/addManagement", ManagementUpload.single('coverPhoto'), async (req, res) => {
+router.post("/addManagement", upload.single('coverPhoto'), async (req, res) => {
   try {
-    const NewManagement = new Management({ ...req.body, coverPhoto: req.file.originalname });
+    const NewManagement = new ManagementTraining({ ...req.body, coverPhoto: req.file.originalname });
     await NewManagement.save();
     res.status(200).send("Management inserted");
   }
@@ -138,9 +140,9 @@ router.post("/addManagement", ManagementUpload.single('coverPhoto'), async (req,
     }
   }
 });
-router.post("/addSecurity", SecurityUpload.single('coverPhoto'), async (req, res) => {
+router.post("/addSecurity", upload.single('coverPhoto'), async (req, res) => {
   try {
-    const NewSecurity = new Security({ ...req.body, coverPhoto: req.file.originalname });
+    const NewSecurity = new SecurityTraining({ ...req.body, coverPhoto: req.file.originalname });
     await NewSecurity.save();
     res.status(200).send("Security inserted");
   }
@@ -158,9 +160,18 @@ router.post("/addSecurity", SecurityUpload.single('coverPhoto'), async (req, res
 
 // DONE delete
 
-router.delete("/Assessment/:id", async (req, res) => {
+router.delete("/assessment/:id", async (req, res) => {
   try {
-    await Assessment.deleteOne({ _id: req.params.id })
+    const data = await AssessmentTraining.findOne({ _id: req.params.id })
+      
+    const image = await data?.coverPhoto;
+
+    const filePath = path.join("./uploaded_file", image);
+
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+    }
+    await AssessmentTraining.deleteOne({ _id: req.params.id })
     res.status(200).send("Assessment deleted!")
   }
   catch (err) {
@@ -173,9 +184,18 @@ router.delete("/Assessment/:id", async (req, res) => {
 
   }
 });
-router.delete("/Customized/:id", async (req, res) => {
+router.delete("/customized/:id", async (req, res) => {
   try {
-    await Customized.deleteOne({ _id: req.params.id })
+    const data = await CustomizedTraining.findOne({ _id: req.params.id })
+      
+        const image = await data?.coverPhoto;
+
+        const filePath = path.join("./uploaded_file", image);
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath)
+        }
+    await CustomizedTraining.deleteOne({ _id: req.params.id })
     res.status(200).send("Customized deleted!")
   }
   catch (err) {
@@ -188,9 +208,18 @@ router.delete("/Customized/:id", async (req, res) => {
 
   }
 });
-router.delete("/Management/:id", async (req, res) => {
+router.delete("/management/:id", async (req, res) => {
   try {
-    await Management.deleteOne({ _id: req.params.id })
+    const data = await ManagementTraining.findOne({ _id: req.params.id })
+      
+    const image = await data?.coverPhoto;
+
+    const filePath = path.join("./uploaded_file", image);
+
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+    }
+    await ManagementTraining.deleteOne({ _id: req.params.id })
     res.status(200).send("Management deleted!")
   }
   catch (err) {
@@ -203,9 +232,18 @@ router.delete("/Management/:id", async (req, res) => {
 
   }
 });
-router.delete("/Security/:id", async (req, res) => {
+router.delete("/security/:id", async (req, res) => {
   try {
-    await Security.deleteOne({ _id: req.params.id })
+    const data = await SecurityTraining.findOne({ _id: req.params.id })
+      
+    const image = await data?.coverPhoto;
+
+    const filePath = path.join("./uploaded_file", image);
+
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+    }
+    await SecurityTraining.deleteOne({ _id: req.params.id })
     res.status(200).send("Security deleted!")
   }
   catch (err) {
@@ -221,9 +259,18 @@ router.delete("/Security/:id", async (req, res) => {
 
 //DONE update
 
-router.put('/Assessment/:id', AssesmentUpload.single('coverPhoto'), async (req, res) => {
+router.put('/assessment/:id', upload.single('coverPhoto'), async (req, res) => {
   try {
-    await Assessment.findByIdAndUpdate(
+    const data = await AssessmentTraining.findOne({ _id: req.params.id })
+      
+    const image = await data?.coverPhoto;
+
+    const filePath = path.join("./uploaded_file", image);
+
+    if (req.file && fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+    }
+    await AssessmentTraining.findByIdAndUpdate(
       { _id: req.params.id },
       {
         $set: {
@@ -248,9 +295,18 @@ router.put('/Assessment/:id', AssesmentUpload.single('coverPhoto'), async (req, 
     });
   }
 })
-router.put('/Customized/:id', CustomizedUpload.single('coverPhoto'), async (req, res) => {
+router.put('/customized/:id', upload.single('coverPhoto'), async (req, res) => {
   try {
-    await Customized.findByIdAndUpdate(
+    const data = await CustomizedTraining.findOne({ _id: req.params.id })
+      
+    const image = await data?.coverPhoto;
+
+    const filePath = path.join("./uploaded_file", image);
+
+    if (req.file && fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+    }
+    await CustomizedTraining.findByIdAndUpdate(
       { _id: req.params.id },
       {
         $set: {
@@ -276,9 +332,18 @@ router.put('/Customized/:id', CustomizedUpload.single('coverPhoto'), async (req,
     });
   }
 })
-router.put('/Management/:id', ManagementUpload.single('coverPhoto'), async (req, res) => {
+router.put('/management/:id', upload.single('coverPhoto'), async (req, res) => {
   try {
-    await Management.findByIdAndUpdate(
+    const data = await ManagementTraining.findOne({ _id: req.params.id })
+      
+    const image = await data?.coverPhoto;
+
+    const filePath = path.join("./uploaded_file", image);
+
+    if (req.file && fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+    }
+    await ManagementTraining.findByIdAndUpdate(
       { _id: req.params.id },
       {
         $set: {
@@ -304,9 +369,18 @@ router.put('/Management/:id', ManagementUpload.single('coverPhoto'), async (req,
     });
   }
 })
-router.put('/Security/:id', SecurityUpload.single('coverPhoto'), async (req, res) => {
+router.put('/security/:id', upload.single('coverPhoto'), async (req, res) => {
   try {
-    await Security.findByIdAndUpdate(
+    const data = await SecurityTraining.findOne({ _id: req.params.id })
+      
+    const image = await data?.coverPhoto;
+
+    const filePath = path.join("./uploaded_file", image);
+
+    if (req.file && fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+    }
+    await SecurityTraining.findByIdAndUpdate(
       { _id: req.params.id },
       {
         $set: {
