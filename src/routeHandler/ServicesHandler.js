@@ -8,6 +8,7 @@ const router = express.Router();
 
 const fs = require('fs')
 const path = require('path');
+const ManagedServices = require('../schemas/Services/ManagedServices');
 
 //DONE get
   router.get("/allAuditing", async (req, res) => {
@@ -46,6 +47,15 @@ const path = require('path');
       res.status(500).send("server side error!");
     }
   });
+  router.get("/allManagedServices", async (req, res) => {
+    try {
+      const data = await ManagedServices.find({});
+  
+      res.status(200).json(data);
+    } catch (err) {
+      res.status(500).send("server side error!");
+    }
+  });
   
   // DONE  get single by id in body
   router.get("/auditing/:id", async (req, res) => {
@@ -78,6 +88,15 @@ const path = require('path');
   router.get("/securityTesting/:id", async (req, res) => {
     try {
       const data = await SecurityTesting.findOne({_id:req.params.id});
+  
+      res.status(200).json(data);
+    } catch (err) {
+      res.status(500).send("server side error!");
+    }
+  });
+  router.get("/managedServices/:id", async (req, res) => {
+    try {
+      const data = await ManagedServices.findOne({_id:req.params.id});
   
       res.status(200).json(data);
     } catch (err) {
@@ -157,6 +176,23 @@ const path = require('path');
       }
     }
   });
+  router.post("/addManagedServices", upload.single('coverPhoto'), async (req, res) => {
+    try {
+      const NewManagedServices = new ManagedServices({ ...req.body, coverPhoto: req.file.originalname });
+      await NewManagedServices.save();
+      res.status(200).send("SecurityTesting inserted");
+    }
+    catch (err) {
+      if (err) {
+        if (err.code === 11000) {
+          res.status(500).send("This ManagedServices is alrady taken!");
+        } else {
+          // console.log(err)
+          res.status(500).send("server side error!");
+        }
+      }
+    }
+  });
   
   // DONE delete
   
@@ -214,7 +250,6 @@ const path = require('path');
         res.status(500).json({ message: "Consultation deletion failed!!" });
     }
   });
-
   router.delete("/securityTesting/:id", async (req, res) => {
     try {
       const data = await SecurityTesting.findOne({ _id: req.params.id })
@@ -231,6 +266,24 @@ const path = require('path');
     }
     catch (err) {
         res.status(500).json({ message: "SecurityTesting deletion failed!!" });  
+    }
+  });
+  router.delete("/managedServices/:id", async (req, res) => {
+    try {
+      const data = await ManagedServices.findOne({ _id: req.params.id })
+      
+      const image = await data?.coverPhoto;
+
+      const filePath = path.join("./uploaded_file", image);
+
+      if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath)
+      }
+      await SecurityTesting.deleteOne({ _id: req.params.id })
+      res.status(200).send("ManagedServices deleted!")
+    }
+    catch (err) {
+        res.status(500).json({ message: "ManagedServices deletion failed!!" });  
     }
   });
   
@@ -374,6 +427,42 @@ const path = require('path');
         }
       )
       res.status(200).send({ message: "SecurityTesting updated successfully ! " })
+  
+    } catch (err) {
+      res.status(200).json({
+        message: "server error !",
+      });
+    }
+  })
+  router.put('/managedServices/:id', upload.single('coverPhoto'), async (req, res) => {
+    try {
+      const data = await ManagedServices.findOne({ _id: req.params.id })
+      
+      const image = await data?.coverPhoto;
+
+      const filePath = path.join("./uploaded_file", image);
+
+      if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath)
+      }
+      await ManagedServices.findByIdAndUpdate(
+        { _id: req.params.id },
+        {
+          $set: {
+            name: req.body?.name,
+            coverPhoto: req?.file?.originalname,
+            divTitle: req.body?.divTitle,
+            divDescription: req.body?.divDescription
+  
+          }
+  
+        },
+        {
+          new: true,
+          useFindAndModify: false,
+        }
+      )
+      res.status(200).send({ message: "ManagedServices updated successfully ! " })
   
     } catch (err) {
       res.status(200).json({
