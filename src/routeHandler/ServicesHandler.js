@@ -279,7 +279,7 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
       if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
       }
-      await SecurityTesting.deleteOne({ _id: req.params.id })
+      await ManagedServices.deleteOne({ _id: req.params.id })
       res.status(200).send("ManagedServices deleted!")
     }
     catch (err) {
