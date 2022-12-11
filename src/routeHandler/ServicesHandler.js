@@ -3,8 +3,11 @@ const Auditing = require('../schemas/Services/Auditing');
 const Certification = require('../schemas/Services/Certification');
 const Consultation = require('../schemas/Services/Consultation');
 const SecurityTesting = require('../schemas/Services/SecurityTesting');
-const { AuditingUpload, CertificationUpload, ConsultationUpload, SecurityTestingUpload } = require('../util/upload');
+const { upload } = require('../util/upload');
 const router = express.Router();
+
+const fs = require('fs')
+const path = require('path');
 
 //DONE get
   router.get("/allAuditing", async (req, res) => {
@@ -44,37 +47,37 @@ const router = express.Router();
     }
   });
   
-  // DONE  get single by name in body
-  router.get("/auditing", async (req, res) => {
+  // DONE  get single by id in body
+  router.get("/auditing/:id", async (req, res) => {
     try {
-      const data = await Auditing.findOne({name:req.body.name});
+      const data = await Auditing.findOne({_id:req.params.id});
   
       res.status(200).json(data);
     } catch (err) {
       res.status(500).send("server side error!");
     }
   });
-  router.get("/certification", async (req, res) => {
+  router.get("/certification/:id", async (req, res) => {
     try {
-      const data = await Certification.findOne({name:req.body.name});
+      const data = await Certification.findOne({_id:req.params.id});
   
       res.status(200).json(data);
     } catch (err) {
       res.status(500).send("server side error!");
     }
   });
-  router.get("/consultation", async (req, res) => {
+  router.get("/consultation/:id", async (req, res) => {
     try {
-      const data = await Consultation.findOne({name:req.body.name});
+      const data = await Consultation.findOne({_id:req.params.id});
   
       res.status(200).json(data);
     } catch (err) {
       res.status(500).send("server side error!");
     }
   });
-  router.get("/securityTesting", async (req, res) => {
+  router.get("/securityTesting/:id", async (req, res) => {
     try {
-      const data = await SecurityTesting.findOne({name:req.body.name});
+      const data = await SecurityTesting.findOne({_id:req.params.id});
   
       res.status(200).json(data);
     } catch (err) {
@@ -84,25 +87,25 @@ const router = express.Router();
   
   //DONE post
   
-  router.post("/addAuditing", AuditingUpload.single('coverPhoto'), async (req, res) => {
+  router.post("/addAuditing", upload.single('coverPhoto'), async (req, res) => {
     try {
       const NewAuditing = new Auditing({ ...req.body, coverPhoto: req.file.originalname });
       await NewAuditing.save();
-      //console.log(data)
-      res.status(200).send("Auditing inserted")
+      
+      res.status(200).send({ message:"Auditing inserted"})
     }
     catch (err) {
   
       if (err.code === 11000) {
-        res.status(500).send("This Auditing is alrady taken!");
+        res.status(500).send({ message:"This Auditing is alrady taken!"});
       } else {
         //console.log(err)
-        res.status(500).send("server side error!");
+        res.status(500).send({ message:"server side error!"});
       }
   
     }
   });
-  router.post("/addCertification", CertificationUpload.single('coverPhoto'), async (req, res) => {
+  router.post("/addCertification", upload.single('coverPhoto'), async (req, res) => {
   
     try {
       const NewCertification = new Certification({ ...req.body, coverPhoto: req.file.originalname });
@@ -120,7 +123,7 @@ const router = express.Router();
       }
     }
   });
-  router.post("/addConsultation", ConsultationUpload.single('coverPhoto'), async (req, res) => {
+  router.post("/addConsultation", upload.single('coverPhoto'), async (req, res) => {
     try {
       const NewConsultation = new Consultation({ ...req.body, coverPhoto: req.file.originalname });
       await NewConsultation.save();
@@ -137,7 +140,7 @@ const router = express.Router();
       }
     }
   });
-  router.post("/addSecurityTesting", SecurityTestingUpload.single('coverPhoto'), async (req, res) => {
+  router.post("/addSecurityTesting", upload.single('coverPhoto'), async (req, res) => {
     try {
       const NewSecurityTesting = new SecurityTesting({ ...req.body, coverPhoto: req.file.originalname });
       await NewSecurityTesting.save();
@@ -159,36 +162,51 @@ const router = express.Router();
   
   router.delete("/auditing/:id", async (req, res) => {
     try {
+      const data = await Auditing.findOne({ _id: req.params.id })
+      
+      const image = await data?.coverPhoto;
+
+      const filePath = path.join("./uploaded_file", image);
+
+      if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath)
+      }
       await Auditing.deleteOne({ _id: req.params.id })
       res.status(200).send("Auditing deleted!")
     }
     catch (err) {
-      if (err) {
         res.status(500).json({ message: "Auditing deletion failed!!" });
-      } else {
-        //console.log(data);
-        res.status(200).json({ message: "Auditing deleted successfully!!" });
-      }
-  
     }
   });
   router.delete("/certification/:id", async (req, res) => {
     try {
+      const data = await Certification.findOne({ _id: req.params.id })
+      
+      const image = await data?.coverPhoto;
+
+      const filePath = path.join("./uploaded_file", image);
+
+      if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath)
+      }
       await Certification.deleteOne({ _id: req.params.id })
       res.status(200).send("Certification deleted!")
     }
     catch (err) {
-      if (err) {
         res.status(500).json({ message: "Certification deletion failed!!" });
-      } else {
-        //console.log(data);
-        res.status(200).json({ message: "Certification deleted successfully!!" });
-      }
-  
     }
   });
   router.delete("/consultation/:id", async (req, res) => {
     try {
+      const data = await Consultation.findOne({ _id: req.params.id })
+      
+      const image = await data?.coverPhoto;
+
+      const filePath = path.join("./uploaded_file", image);
+
+      if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath)
+      }
       await Consultation.deleteOne({ _id: req.params.id })
       res.status(200).send("Consultation deleted!")
     }
@@ -196,8 +214,18 @@ const router = express.Router();
         res.status(500).json({ message: "Consultation deletion failed!!" });
     }
   });
+
   router.delete("/securityTesting/:id", async (req, res) => {
     try {
+      const data = await SecurityTesting.findOne({ _id: req.params.id })
+      
+      const image = await data?.coverPhoto;
+
+      const filePath = path.join("./uploaded_file", image);
+
+      if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath)
+      }
       await SecurityTesting.deleteOne({ _id: req.params.id })
       res.status(200).send("SecurityTesting deleted!")
     }
@@ -208,14 +236,22 @@ const router = express.Router();
   
   //DONE update
   
-  router.put('/auditing/:id', AuditingUpload.single('coverPhoto'), async (req, res) => {
+  router.put('/auditing/:id', upload.single('coverPhoto'), async (req, res) => {
     try {
+      const data = await Auditing.findOne({ _id: req.params.id })
+      
+      const image = await data?.coverPhoto;
+
+      const filePath = path.join("./uploaded_file", image);
+
+      if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath)
+      }
       await Auditing.findByIdAndUpdate(
         { _id: req.params.id },
         {
           $set: {
             name: req.body?.name,
-  
             coverPhoto: req?.file?.originalname,
             divTitle: req.body?.divTitle,
             divDescription: req.body?.divDescription
@@ -235,8 +271,17 @@ const router = express.Router();
       });
     }
   })
-  router.put('/certification/:id', CertificationUpload.single('coverPhoto'), async (req, res) => {
+  router.put('/certification/:id', upload.single('coverPhoto'), async (req, res) => {
     try {
+      const data = await Certification.findOne({ _id: req.params.id })
+      
+      const image = await data?.coverPhoto;
+
+      const filePath = path.join("./uploaded_file", image);
+
+      if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath)
+      }
       await Certification.findByIdAndUpdate(
         { _id: req.params.id },
         {
@@ -263,8 +308,17 @@ const router = express.Router();
       });
     }
   })
-  router.put('/consultation/:id', ConsultationUpload.single('coverPhoto'), async (req, res) => {
+  router.put('/consultation/:id', upload.single('coverPhoto'), async (req, res) => {
     try {
+      const data = await Consultation.findOne({ _id: req.params.id })
+      
+      const image = await data?.coverPhoto;
+
+      const filePath = path.join("./uploaded_file", image);
+
+      if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath)
+      }
       await Consultation.findByIdAndUpdate(
         { _id: req.params.id },
         {
@@ -291,8 +345,17 @@ const router = express.Router();
       });
     }
   })
-  router.put('/securityTesting/:id', SecurityTestingUpload.single('coverPhoto'), async (req, res) => {
+  router.put('/securityTesting/:id', upload.single('coverPhoto'), async (req, res) => {
     try {
+      const data = await SecurityTesting.findOne({ _id: req.params.id })
+      
+      const image = await data?.coverPhoto;
+
+      const filePath = path.join("./uploaded_file", image);
+
+      if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath)
+      }
       await SecurityTesting.findByIdAndUpdate(
         { _id: req.params.id },
         {
