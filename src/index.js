@@ -14,7 +14,7 @@ const AboutHandler = require('./routeHandler/AboutHandler')
 const IndustriesHandler = require('./routeHandler/industriesHandler')
 const ContactHandler = require('./routeHandler/ContactHandler')
 const CareerHandler = require('./routeHandler/CareerHandler')
-
+const ServicesHandler = require('./routeHandler/ServicesHandler')
 app.use(express.json());
 require("dotenv").config();
 
@@ -35,6 +35,7 @@ mongoose
     app.use('/todo',todoHandler);
     app.use('/question',questionHandler);
     app.use('/industries',IndustriesHandler);
+    app.use('/services',ServicesHandler)
     app.use('/user',userHandler);
     app.use('/home',HomeHandler);
     app.use('/training',TrainingHandler);

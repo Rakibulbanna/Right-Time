@@ -66,6 +66,7 @@ const firstInsert = async (e) => {
 };
 
 router.post("/addService", async (req, res) => {
+  console.log(req.body)
   const dataCount = await Partners.countDocuments({});
 
   if (dataCount === 1) {
