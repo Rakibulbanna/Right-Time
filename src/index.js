@@ -25,6 +25,7 @@ app.use(cors())
 app.use(passport.initialize())
 require('./config/passport')(passport)
 
+const port = process.env.PORT || 5001;
 
 
 const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.oitzi.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -63,6 +64,6 @@ app.use((err,req,res,next)=>{
    });
 })
 
-app.listen(5001, () => {
-  console.log("server is running at 5001 port");
+app.listen(port, () => {
+  console.log(`server is running at ${port} port`);
 });
