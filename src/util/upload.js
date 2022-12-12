@@ -25,7 +25,8 @@ const upload = multer({
       file.fieldname === "avater_1" ||
       file.fieldname === "avater_2" ||
       file.fieldname === "imgUrl" ||
-      file.fieldname === "coverPhoto") {
+      file.fieldname === "coverPhoto" ||
+      file.fieldname === "iconURL") {
         
       if (
         file.mimetype === "image/jpeg" ||

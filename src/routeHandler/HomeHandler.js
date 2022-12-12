@@ -56,15 +56,19 @@ router.delete('/banner/:id', async (req, res) => {
     const data = await BannerCarosor.findOne({ _id: req.params.id })
 
     const image = await data?.photoURL;
-
-    const filePath = path.join("./uploaded_file", image);
+    
+    if (image){
+      const filePath = path.join("./uploaded_file", image);
 
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath)
     }
+    }
+    
     await BannerCarosor.deleteOne({ _id: req.params.id });
     res.status(200).send({ message: "banner deleted!" })
   } catch (err) {
+    console.log(err)
     res.status(200).json({ message: "server error!!" });
   }
 })

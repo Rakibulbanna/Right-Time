@@ -25,7 +25,7 @@ app.use(cors())
 app.use(passport.initialize())
 require('./config/passport')(passport)
 
-const port = process.env.PORT || 5001;
+const port = process.env.PORT;
 
 
 const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.oitzi.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -35,7 +35,7 @@ mongoose
   .then(() => console.log("database connection successful!"))
   .catch((error) => console.log(error));
 
-    app.use('/todo',todoHandler);
+
     app.use('/question',questionHandler);
     app.use('/industries',IndustriesHandler);
     app.use('/services',ServicesHandler)
@@ -52,7 +52,7 @@ mongoose
 app.use('/static', express.static(path.join(__dirname, '../uploaded_file')))
 
 app.get("/", (req, res) => {
-  res.send("server is running in 5001 port");
+  res.send(`server is running in  ${port} port`);
 });
 
 app.use((err,req,res,next)=>{
