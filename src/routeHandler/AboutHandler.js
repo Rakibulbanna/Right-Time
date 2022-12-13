@@ -112,6 +112,7 @@ router.get('/teamMember/:id', async (req, res) => {
 })
 router.post('/teamMember', upload.single('imgUrl'), async (req, res) => {
     try {
+        console.log(req.file)
         const newTeamMember = new TeamMember({ ...req.body, imgUrl: req.file.originalname })
         await newTeamMember.save()
 
@@ -126,6 +127,7 @@ router.post('/teamMember', upload.single('imgUrl'), async (req, res) => {
 router.put('/teamMember/:id', upload.single('imgUrl'), async (req, res) => {
 
     try {
+        console.log(req)
         const data = await TeamMember.findOne({ _id: req.params.id })
         console.log(data)
         
