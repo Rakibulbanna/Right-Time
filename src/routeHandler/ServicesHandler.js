@@ -200,12 +200,12 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
     try {
       const data = await Auditing.findOne({ _id: req.params.id })
       
-      const image = await data?.coverPhoto;
-
-      const filePath = path.join("./uploaded_file", image);
-
-      if (fs.existsSync(filePath)) {
+      if (await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await Auditing.deleteOne({ _id: req.params.id })
       res.status(200).send("Auditing deleted!")
@@ -218,12 +218,12 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
     try {
       const data = await Certification.findOne({ _id: req.params.id })
       
-      const image = await data?.coverPhoto;
-
-      const filePath = path.join("./uploaded_file", image);
-
-      if (fs.existsSync(filePath)) {
+      if (await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await Certification.deleteOne({ _id: req.params.id })
       res.status(200).send("Certification deleted!")
@@ -236,12 +236,12 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
     try {
       const data = await Consultation.findOne({ _id: req.params.id })
       
-      const image = await data?.coverPhoto;
-
-      const filePath = path.join("./uploaded_file", image);
-
-      if (fs.existsSync(filePath)) {
+      if ( await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await Consultation.deleteOne({ _id: req.params.id })
       res.status(200).send("Consultation deleted!")
@@ -254,12 +254,12 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
     try {
       const data = await SecurityTesting.findOne({ _id: req.params.id })
       
-      const image = await data?.coverPhoto;
-
-      const filePath = path.join("./uploaded_file", image);
-
-      if (fs.existsSync(filePath)) {
+      if (await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await SecurityTesting.deleteOne({ _id: req.params.id })
       res.status(200).send("SecurityTesting deleted!")
@@ -272,12 +272,12 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
     try {
       const data = await ManagedServices.findOne({ _id: req.params.id })
       
-      const image = await data?.coverPhoto;
-
-      const filePath = path.join("./uploaded_file", image);
-
-      if (fs.existsSync(filePath)) {
+      if (await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await ManagedServices.deleteOne({ _id: req.params.id })
       res.status(200).send("ManagedServices deleted!")
@@ -293,12 +293,12 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
     try {
       const data = await Auditing.findOne({ _id: req.params.id })
       
-      const image = await data?.coverPhoto;
-
-      const filePath = path.join("./uploaded_file", image);
-
-      if (fs.existsSync(filePath)) {
+      if (req.file && await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await Auditing.findByIdAndUpdate(
         { _id: req.params.id },
@@ -328,12 +328,12 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
     try {
       const data = await Certification.findOne({ _id: req.params.id })
       
-      const image = await data?.coverPhoto;
-
-      const filePath = path.join("./uploaded_file", image);
-
-      if (fs.existsSync(filePath)) {
+      if (req.file && await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await Certification.findByIdAndUpdate(
         { _id: req.params.id },
@@ -365,12 +365,12 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
     try {
       const data = await Consultation.findOne({ _id: req.params.id })
       
-      const image = await data?.coverPhoto;
-
-      const filePath = path.join("./uploaded_file", image);
-
-      if (fs.existsSync(filePath)) {
+      if (req.file && await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await Consultation.findByIdAndUpdate(
         { _id: req.params.id },
@@ -402,12 +402,12 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
     try {
       const data = await SecurityTesting.findOne({ _id: req.params.id })
       
-      const image = await data?.coverPhoto;
-
-      const filePath = path.join("./uploaded_file", image);
-
-      if (fs.existsSync(filePath)) {
+      if (req.file && await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await SecurityTesting.findByIdAndUpdate(
         { _id: req.params.id },
@@ -438,12 +438,12 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
     try {
       const data = await ManagedServices.findOne({ _id: req.params.id })
       
-      const image = await data?.coverPhoto;
-
-      const filePath = path.join("./uploaded_file", image);
-
-      if (fs.existsSync(filePath)) {
+      if (req.file && await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await ManagedServices.findByIdAndUpdate(
         { _id: req.params.id },

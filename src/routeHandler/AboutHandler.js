@@ -128,13 +128,14 @@ router.put('/teamMember/:id', upload.single('imgUrl'), async (req, res) => {
     try {
         const data = await TeamMember.findOne({ _id: req.params.id })
         console.log(data)
-        const image = await data?.imgUrl;
-
-        const filePath = path.join("./uploaded_file", image);
-
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath)
-        }
+        
+        if (req.file && await data.imgUrl) {
+            const image = await data.imgUrl;
+            const filePath = path.join("./uploaded_file", image);
+            if (fs.existsSync(filePath)) {
+              fs.unlinkSync(filePath)
+            }
+          }
 
         await TeamMember.updateOne(
             { _id: req.params.id },
@@ -166,13 +167,13 @@ router.delete('/teamMember/:id', async (req, res) => {
         const data = await TeamMember.findOne({ _id: req.params.id })
 
         //console.log(data)
-        const image = await data?.imgUrl;
-
-        const filePath = path.join("./uploaded_file", image);
-
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath)
-        }
+        if (await data.imgUrl) {
+            const image = await data.imgUrl;
+            const filePath = path.join("./uploaded_file", image);
+            if (fs.existsSync(filePath)) {
+              fs.unlinkSync(filePath)
+            }
+          }
 
 
         await TeamMember.deleteOne({ _id: req.params.id })

@@ -51,12 +51,12 @@ router.delete('/:id', async (req, res) => {
 
     const data = await Contact.findOne({ _id: req.params.id })
 
-    const image = await data?.coverPhoto;
-
-    const filePath = path.join("./uploaded_file", image);
-
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath)
+    if (await data.coverPhoto) {
+      const image = await data.coverPhoto;
+      const filePath = path.join("./uploaded_file", image);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+      }
     }
     await Contact.deleteOne({ _id: req.params.id });
 
@@ -82,6 +82,15 @@ router.delete('/:id', async (req, res) => {
     require:true
   },
  */
+
+  router.get('/clientContact/',async(req,res)=>{
+    try {
+      const data = await ClientContact.find({});
+      res.status(200).json(data);
+    } catch (err) {
+      res.status(500).send({ message: "server side error!" });
+    }
+  })
 router.post('/clientContact/', async (req, res) => {
   try {
     const newContact = new ClientContact(req.body);

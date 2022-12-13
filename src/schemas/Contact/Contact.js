@@ -4,9 +4,6 @@ const Contact = mongoose.Schema({
   title: {
     type: String,
   },
-  coverPhoto: {
-    type: String,
-  },
   address:{
     type: String
   },

@@ -55,16 +55,14 @@ router.delete('/banner/:id', async (req, res) => {
   try {
     const data = await BannerCarosor.findOne({ _id: req.params.id })
 
-    const image = await data?.photoURL;
-    
-    if (image){
+    if (await data.photoURL) {
+      const image = await data.photoURL;
       const filePath = path.join("./uploaded_file", image);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+      }
+    }
 
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath)
-    }
-    }
-    
     await BannerCarosor.deleteOne({ _id: req.params.id });
     res.status(200).send({ message: "banner deleted!" })
   } catch (err) {
@@ -77,12 +75,12 @@ router.put('/banner/:id', upload.single('photoURL'), async (req, res) => {
   try {
     const data = await BannerCarosor.findOne({ _id: req.params.id })
 
-    const image = await data?.photoURL;
-
-    const filePath = path.join("./uploaded_file", image);
-
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath)
+    if (req.file && await data.photoURL) {
+      const image = await data.photoURL;
+      const filePath = path.join("./uploaded_file", image);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+      }
     }
     await BannerCarosor.updateOne({ _id: req.params.id }, {
       $set: {
@@ -139,12 +137,12 @@ router.get('/service/:id', async (req, res) => {
 router.put("/service/:id", upload.single('photoURL'), async (req, res) => {
   const data = await ServicesCarosor.findOne({ _id: req.params.id })
 
-  const image = await data?.photoURL;
-
-  const filePath = path.join("./uploaded_file", image);
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath)
+  if (req.file && await data.photoURL) {
+    const image = await data.photoURL;
+    const filePath = path.join("./uploaded_file", image);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
   }
   await ServicesCarosor.findOneAndUpdate(
     { _id: req.params.id },
@@ -173,13 +171,14 @@ router.delete("/service/:id", async (req, res) => {
 
   const data = await ServicesCarosor.findOne({ _id: req.params.id })
 
-  const image = await data?.photoURL;
-
-  const filePath = path.join("./uploaded_file", image);
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath)
+  if (await data.photoURL) {
+    const image = await data?.photoURL;
+    const filePath = path.join("./uploaded_file", image);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
   }
+
   await ServicesCarosor.deleteOne({ _id: req.params.id }, {}, (err, data) => {
     if (err) {
       res.status(500).json({ message: "Services Carosor deleteting error!" });
@@ -227,12 +226,12 @@ router.post("/association", upload.single('photoURL'), async (req, res) => {
 router.delete('/association/:id', async (req, res) => {
   const data = await AssociationCarosor.findOne({ _id: req.params.id })
 
-  const image = await data?.photoURL;
-
-  const filePath = path.join("./uploaded_file", image);
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath)
+  if (await data.photoURL) {
+    const image = await data.photoURL;
+    const filePath = path.join("./uploaded_file", image);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
   }
   await AssociationCarosor.deleteOne({ _id: req.params.id }, (err, data) => {
     if (err) {
@@ -246,12 +245,12 @@ router.delete('/association/:id', async (req, res) => {
 router.put('/association/:id', upload.single('photoURL'), async (req, res) => {
   const data = await AssociationCarosor.findOne({ _id: req.params.id })
 
-  const image = await data?.photoURL;
-
-  const filePath = path.join("./uploaded_file", image);
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath)
+  if (req.file && await data.photoURL) {
+    const image = await data.photoURL;
+    const filePath = path.join("./uploaded_file", image);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
   }
   await AssociationCarosor.findOneAndUpdate(
     { _id: req.params.id },
@@ -292,7 +291,7 @@ router.get('/clientFeedback/:id', async (req, res) => {
   }
 });
 router.post("/clientFeedback", upload.single('photoURL'), async (req, res) => {
-  
+
   try {
     const NewClientFeedBack = new ClientFeedBack({ ...req.body, photoURL: req.file.originalname });
     await NewClientFeedBack.save();
@@ -308,12 +307,12 @@ router.post("/clientFeedback", upload.single('photoURL'), async (req, res) => {
 router.delete('/clientFeedback/:id', async (req, res) => {
   const data = await ClientFeedBack.findOne({ _id: req.params.id })
 
-  const image = await data?.photoURL;
-
-  const filePath = path.join("./uploaded_file", image);
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath)
+  if (await data.photoURL) {
+    const image = await data.photoURL;
+    const filePath = path.join("./uploaded_file", image);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
   }
   await ClientFeedBack.deleteOne({ _id: req.params.id }, (err, data) => {
     if (err) {
@@ -327,12 +326,12 @@ router.delete('/clientFeedback/:id', async (req, res) => {
 router.put('/clientFeedback/:id', upload.single('photoURL'), async (req, res) => {
   const data = await ClientFeedBack.findOne({ _id: req.params.id })
 
-  const image = await data?.photoURL;
-
-  const filePath = path.join("./uploaded_file", image);
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath)
+  if (req.file && await data.photoURL) {
+    const image = await data.photoURL;
+    const filePath = path.join("./uploaded_file", image);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
   }
   await ClientFeedBack.findOneAndUpdate(
     { _id: req.params.id },
@@ -392,12 +391,12 @@ router.post("/clientCarousel", upload.single('photoURL'), async (req, res) => {
 router.delete('/clientCarousel/:id', async (req, res) => {
   const data = await ClientCarousel.findOne({ _id: req.params.id })
 
-  const image = await data?.photoURL;
-
-  const filePath = path.join("./uploaded_file", image);
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath)
+  if (await data.photoURL) {
+    const image = await data.photoURL;
+    const filePath = path.join("./uploaded_file", image);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
   }
   await ClientCarousel.deleteOne({ _id: req.params.id }, (err, data) => {
     if (err) {
@@ -411,12 +410,12 @@ router.delete('/clientCarousel/:id', async (req, res) => {
 router.put('/clientCarousel/:id', upload.single('photoURL'), async (req, res) => {
   const data = await ClientCarousel.findOne({ _id: req.params.id })
 
-  const image = await data?.photoURL;
-
-  const filePath = path.join("./uploaded_file", image);
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath)
+  if (req.file && await data.photoURL) {
+    const image = await data.photoURL;
+    const filePath = path.join("./uploaded_file", image);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
   }
   await ClientCarousel.findOneAndUpdate(
     { _id: req.params.id },
@@ -457,10 +456,10 @@ router.get('/partnerCarousel/:id', async (req, res) => {
   }
 });
 router.post("/partnerCarousel", upload.single('photoURL'), async (req, res) => {
-   try {
-  console.log({ ...req.body, photoURL: req.file.originalname })
-  const NewPartnerCarousel = new PartnerCarousel({ ...req.body, photoURL: req.file.originalname });
- 
+  try {
+    console.log({ ...req.body, photoURL: req.file.originalname })
+    const NewPartnerCarousel = new PartnerCarousel({ ...req.body, photoURL: req.file.originalname });
+
     await NewPartnerCarousel.save();
     res.status(200).json({
       message: "New PartnerCarousel inserted successfully",
@@ -474,12 +473,12 @@ router.post("/partnerCarousel", upload.single('photoURL'), async (req, res) => {
 router.delete('/partnerCarousel/:id', async (req, res) => {
   const data = await PartnerCarousel.findOne({ _id: req.params.id })
 
-  const image = await data?.photoURL;
-
-  const filePath = path.join("./uploaded_file", image);
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath)
+  if (await data.photoURL) {
+    const image = await data.photoURL;
+    const filePath = path.join("./uploaded_file", image);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
   }
   await PartnerCarousel.deleteOne({ _id: req.params.id }, (err, data) => {
     if (err) {
@@ -493,12 +492,12 @@ router.delete('/partnerCarousel/:id', async (req, res) => {
 router.put('/partnerCarousel/:id', upload.single('photoURL'), async (req, res) => {
   const data = await PartnerCarousel.findOne({ _id: req.params.id })
 
-  const image = await data?.photoURL;
-
-  const filePath = path.join("./uploaded_file", image);
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath)
+  if (req.file && await data.photoURL) {
+    const image = await data.photoURL;
+    const filePath = path.join("./uploaded_file", image);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
   }
   await PartnerCarousel.findOneAndUpdate(
     { _id: req.params.id },

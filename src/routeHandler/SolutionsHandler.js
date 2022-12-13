@@ -47,12 +47,12 @@ router.get("/security/", async (req, res) => {
     try {
       const data = await SecurityAssessmentSolutions.findOne({ _id: req.params.id })
         
-      const image = await data?.coverPhoto;
-  
-      const filePath = path.join("./uploaded_file", image);
-  
-      if (fs.existsSync(filePath)) {
+      if (await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await SecurityAssessmentSolutions.deleteOne({ _id: req.params.id })
       res.status(200).send("SecurityAssessmentSolutions deleted!")
@@ -71,12 +71,12 @@ router.get("/security/", async (req, res) => {
     try {
       const data = await SecurityAssessmentSolutions.findOne({ _id: req.params.id })
         
-      const image = await data?.coverPhoto;
-  
-      const filePath = path.join("./uploaded_file", image);
-  
-      if (req.file && fs.existsSync(filePath)) {
+      if (req.file && await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await SecurityAssessmentSolutions.findByIdAndUpdate(
         { _id: req.params.id },
@@ -145,12 +145,12 @@ router.get("/cyberSecurity/", async (req, res) => {
     try {
       const data = await CyberSecuritySolutions.findOne({ _id: req.params.id })
         
-      const image = await data?.coverPhoto;
-  
-      const filePath = path.join("./uploaded_file", image);
-  
-      if (fs.existsSync(filePath)) {
+      if (await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await CyberSecuritySolutions.deleteOne({ _id: req.params.id })
       res.status(200).send("CyberSecuritySolutions deleted!")
@@ -169,12 +169,12 @@ router.get("/cyberSecurity/", async (req, res) => {
     try {
       const data = await CyberSecuritySolutions.findOne({ _id: req.params.id })
         
-      const image = await data?.coverPhoto;
-  
-      const filePath = path.join("./uploaded_file", image);
-  
-      if (req.file && fs.existsSync(filePath)) {
+      if (req.file && await data.coverPhoto) {
+        const image = await data.coverPhoto;
+        const filePath = path.join("./uploaded_file", image);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath)
+        }
       }
       await CyberSecuritySolutions.findByIdAndUpdate(
         { _id: req.params.id },

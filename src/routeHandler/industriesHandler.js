@@ -73,13 +73,13 @@ router.put('/:id', upload.single('coverPhoto'), async (req, res) => {
   try {
     const data = await Industries.findOne({ _id: req.params.id })
       
-        const image = await data?.coverPhoto;
-
-        const filePath = path.join("./uploaded_file", image);
-
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath)
-        }
+    if (req.file && await data.coverPhoto) {
+      const image = await data.coverPhoto;
+      const filePath = path.join("./uploaded_file", image);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+      }
+    }
     await Industries.findByIdAndUpdate(
       { _id: req.params.id },
       {
@@ -110,12 +110,12 @@ router.delete("/:id", async (req, res) => {
   try {
     const data = await Industries.findOne({ _id: req.params.id })
 
-    const image = await data?.coverPhoto;
-
-    const filePath = path.join("./uploaded_file", image);
-
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath)
+    if (await data.coverPhoto) {
+      const image = await data.coverPhoto;
+      const filePath = path.join("./uploaded_file", image);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+      }
     }
     await Industries.deleteOne({ _id: req.params.id })
     res.status(200).send("Industries deleted!")
