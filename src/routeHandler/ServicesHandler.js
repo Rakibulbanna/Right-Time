@@ -166,14 +166,14 @@ const ManagedServices = require('../schemas/Services/ManagedServices');
       res.status(200).send("SecurityTesting inserted");
     }
     catch (err) {
-      if (err) {
+      
         if (err.code === 11000) {
           res.status(500).send("This SecurityTesting is alrady taken!");
         } else {
           // console.log(err)
           res.status(500).send("server side error!");
         }
-      }
+      
     }
   });
   router.post("/addManagedServices", upload.single('coverPhoto'), async (req, res) => {
