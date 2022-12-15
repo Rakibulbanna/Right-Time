@@ -12,9 +12,9 @@ router.post('/register',register)
 
 router.post('/login',login)
 
-router.get('/all',authenticate,allUser)
+router.get('/all',allUser)
 
-router.post("/adduser",authenticate,adduser);
+router.post("/adduser",adduser);
 
 router.put("/update-user",authenticate,updateUser);
 
