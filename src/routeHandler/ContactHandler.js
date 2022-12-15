@@ -37,27 +37,28 @@ router.get('/', async (req, res) => {
     res.status(500).send({ message: "server side error!" });
   }
 })
-router.post('/', upload.single('coverPhoto'), async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const newContact = new Contact({ ...req.body, coverPhoto: req.file.originalname });
+    const data = await Contact.findOne({ _id: req.params.id });
+    //  const data = await Training.find({}).populate('Assessment')
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send({ message: "server side error!" });
+  }
+})
+router.post('/', async (req, res) => {
+  try {
+    const newContact = new Contact(req.body);
     await newContact.save()
     res.status(200).json({ message: "contact added !" });
   } catch (err) {
+    console.log(err);
     res.status(500).send({ message: "server side error!" });
   }
 })
 router.delete('/:id', async (req, res) => {
   try {
 
-    const data = await Contact.findOne({ _id: req.params.id })
-
-    if (await data.coverPhoto) {
-      const image = await data.coverPhoto;
-      const filePath = path.join("./uploaded_file", image);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath)
-      }
-    }
     await Contact.deleteOne({ _id: req.params.id });
 
     res.status(200).json({ message: "contact deleted !" });
