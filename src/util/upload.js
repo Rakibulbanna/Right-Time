@@ -7,9 +7,11 @@ const storage = multer.diskStorage({
     cb(null, "./uploaded_file");
   },
   filename: (req, file, cb) => {
-    // const fileExtension = path.extname(file.originalname);
-    // const fileName = file.originalname.replace(fileExtension, "").toLowerCase().split(" ").join("-") + Date.now();
-    cb(null, file.originalname);
+     const fileExtension = path.extname(file.originalname);
+     const fileName = file.originalname.replace(fileExtension, "").toLowerCase().split(" ").join("_") + fileExtension;
+    // console.log(fileName)
+    //cb(null, file.originalname);
+    cb(null, fileName);
   },
 });
 const upload = multer({
@@ -34,16 +36,21 @@ const upload = multer({
         file.mimetype === "image/png"
       ) {
         cb(null, true);
-      } else {
+      }
+       else {
         cb(new Error("only jpg, png, jpeg file allowed !!"));
       }
-    } else if (file.fieldname === "doc") {
+    }
+    
+    else if (file.fieldname === "doc") {
       if (file.mimetype === "application/pdf") {
         cb(null, true);
       } else {
         cb(new Error("only pdf file allowed !!"));
       }
-    } else {
+    } 
+    
+    else {
       cb(new Error("There was an unknown error !!"));
     }
   },

@@ -9,13 +9,14 @@ const ServicesCarosor = require("../schemas/HomePage/ServicesCarosor");
 const { upload } = require("../util/upload");
 const fs = require('fs')
 const path = require('path');
+const Authenticate = require("../config/Authenticate");
 
 const router = express.Router();
 
 
 //Banner section
 
-router.get("/banner", async (req, res) => {
+router.get("/banner",Authenticate, async (req, res) => {
   try {
     const data = await BannerCarosor.find({});
     res.status(200).json(data);
@@ -23,7 +24,7 @@ router.get("/banner", async (req, res) => {
     res.status(500).send("server side error!");
   }
 });
-router.get("/banner/:id", async (req, res) => {
+router.get("/banner/:id",Authenticate, async (req, res) => {
   try {
     const data = await BannerCarosor.findOne({ _id: req.params.id });
     res.status(200).json(data);
@@ -32,7 +33,7 @@ router.get("/banner/:id", async (req, res) => {
   }
 });
 
-router.post("/banner", upload.single('photoURL'), async (req, res) => {
+router.post("/banner", Authenticate,upload.single('photoURL'), async (req, res) => {
 
   try {
     console.log(req.file)
@@ -51,7 +52,7 @@ router.post("/banner", upload.single('photoURL'), async (req, res) => {
   }
 });
 
-router.delete('/banner/:id', async (req, res) => {
+router.delete('/banner/:id',Authenticate, async (req, res) => {
   try {
     const data = await BannerCarosor.findOne({ _id: req.params.id })
 
@@ -71,7 +72,7 @@ router.delete('/banner/:id', async (req, res) => {
   }
 })
 
-router.put('/banner/:id', upload.single('photoURL'), async (req, res) => {
+router.put('/banner/:id',Authenticate, upload.single('photoURL'), async (req, res) => {
   try {
     const data = await BannerCarosor.findOne({ _id: req.params.id })
 
