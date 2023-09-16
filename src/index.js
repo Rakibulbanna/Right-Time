@@ -28,7 +28,7 @@ require('./config/passport')(passport)
 const port = process.env.PORT;
 
 
-const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.oitzi.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.lscxpuy.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })

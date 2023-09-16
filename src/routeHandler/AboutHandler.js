@@ -112,8 +112,12 @@ router.get('/teamMember/:id', async (req, res) => {
 })
 router.post('/teamMember', upload.single('imgUrl'), async (req, res) => {
     try {
-        console.log(req.file)
-        const newTeamMember = new TeamMember({ ...req.body, imgUrl: req.file.originalname })
+        // console.log(req.file)
+        
+        const fileExtension = path.extname(req.file.originalname);
+        const fileName = req.file.originalname.replace(fileExtension, "").toLowerCase().split(" ").join("_") + fileExtension;
+
+        const newTeamMember = new TeamMember({ ...req.body, imgUrl: fileName })
         await newTeamMember.save()
 
         res.status(200).send({ message: "team member insertion success !!" });
@@ -129,22 +133,26 @@ router.put('/teamMember/:id', upload.single('imgUrl'), async (req, res) => {
     try {
         console.log(req)
         const data = await TeamMember.findOne({ _id: req.params.id })
-        console.log(data)
-        
+       // console.log(data)
+        let fileName;
         if (req.file && await data.imgUrl) {
+            const fileExtension = path.extname(req.file.originalname);
+            fileName = req.file.originalname.replace(fileExtension, "").toLowerCase().split(" ").join("_") + fileExtension;
             const image = await data.imgUrl;
             const filePath = path.join("./uploaded_file", image);
             if (fs.existsSync(filePath)) {
-              fs.unlinkSync(filePath)
+                fs.unlinkSync(filePath)
             }
-          }
+        }
+
+
 
         await TeamMember.updateOne(
             { _id: req.params.id },
             {
                 $set: {
                     name: req.body?.name,
-                    imgUrl: req?.file?.originalname,
+                    imgUrl: fileName,
                     designation: req.body?.designation,
                     description: req.body?.description
 
@@ -173,9 +181,9 @@ router.delete('/teamMember/:id', async (req, res) => {
             const image = await data.imgUrl;
             const filePath = path.join("./uploaded_file", image);
             if (fs.existsSync(filePath)) {
-              fs.unlinkSync(filePath)
+                fs.unlinkSync(filePath)
             }
-          }
+        }
 
 
         await TeamMember.deleteOne({ _id: req.params.id })
